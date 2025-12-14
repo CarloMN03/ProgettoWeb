@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="it">
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link rel="stylesheet" href="style.css"/>
+        <title>StudyBo - Area Personale</title>
+    </head>
+    <body>
+        <header>
+            <div>
+            <img src="logo.libro.png.PNG" alt="logo studybo libro"/><h1>StudyBo</h1>
+            </div><button class="lang-switch" type="button">IT</button><button class="hamburger" type ="button" id="hamburger" value="=" onclick="openForm('x', 'nav', 'hamburger')">hamb</button><button type="button" id="x" onclick="closeForm('x', 'nav', 'hamburger')">ciao</button>
+        </header>
+    </body>
+    <main>
+        <nav id="nav">
+            <ul>
+                <li><a href="#">Accedi/Registrati</a></li>
+                <li><a href="#">Corsi di Laurea</a></li>
+                <li><a href="#">Study Group</a></li>
+                <li><a href="#">Risorse</a></li>
+                <li><a href="#">Contatti</a></li>
+            </ul>
+        </nav>
+        <h2>Ciao Pinco</h2>
+        <section class="gest-utente">
+            <h3>Gestisci il tuo account</h3>
+            <div class="changepwd">
+                <h4>Cambia Password</h4>
+                <form id="chgpwd">
+                    <ul>
+                        <li>
+                            <label for="oldPwd">Vecchia password: </label><input type="password" name="oldPwd" id="oldPwd"/>
+                        </li>
+                        <li>
+                            <label for="newPwd">Nuova password: </label><input type="password" name="newPwd" id="newPwd"/>
+                        </li>
+                        <li>
+                            <label for="reNewPwd">Conferma nuova password: </label><input type="password" name="reNewPwd" id="reNewPwd"/>
+                        </li>
+                        <li>
+                            <input type="submit" value="Invia"/>
+                        </li>
+                    </ul>
+                </form>
+                <input type="button" id="closepwd" value="ʌ" onclick="closeForm('closepwd', 'chgpwd', 'openpwd')">
+                <input type="button" id="openpwd" value="v" onclick="openForm('closepwd', 'chgpwd', 'openpwd')">
+            </div>
+            <div class="changecdl">
+                <h4>Cambia Corso di Laurea</h4>
+                <form id="chgcdl">
+                    <ul>
+                        <li>
+                            <label for="newCdl">Scegli il nuovo Corso di Laurea: </label><select name="Cdl" id="newCdl">
+                                <option value=""></option>
+                                <option value="ingInf">Ingegneria Informatica</option>
+                                <option value="ingBio">Ingegneria Biomedica</option>
+                                <option value="ingEl">Ingegneria Elettronica</option>
+                            </select>
+                        </li>
+                        <li>
+                            <input type="submit" value="Invia"/>
+                        </li>
+                    </ul>
+                </form>
+                <input type="button" id="closecdl" value="ʌ" onclick="closeForm('closecdl', 'chgcdl', 'opencdl')">
+                <input type="button" id="opencdl" value="v" onclick="openForm('closecdl', 'chgcdl', 'opencdl')">
+            </div>
+            <div class="deletecdl">
+                <h4>Elimina Account</h4>
+                <form id="delacc">
+                    <ul>
+                        <li>
+                            <label for="pwd">Password: </label><input type="password" name="pwd" id="pwd"/>
+                        </li>
+                        <li>
+                            <input type="submit" value="Elimina Account"/>
+                        </li>
+                    </ul>
+                </form>
+                <input type="button" id="closedel" value="ʌ" onclick="closeForm('closedel', 'delacc', 'opendel')">
+                <input type="button" id="opendel" value="v" onclick="openForm('closedel', 'delacc', 'opendel')">
+            </div>
+        </section>
+        <section class="iscr-sg">
+            <h3>Study Group ai quali sei iscritto</h3>
+            <div class="sgcard">
+                <div class="sgimg">
+                    <img src="tecwb.jpg" alt="Tecnologie Web"/>
+                </div><div class="sgdesc">
+                    <h5>Tecnologie Web</h5>
+                    <p>Tema: HTML</p>
+                    <p>Luogo: online</p>
+                    <p>Lingua: italiano</p>
+                    <p>Data: 12/12/2025</p>
+                    <p>Ora: 15:30</p>
+                </div><div class="sginvito">
+                    <p>Invita amici</p>
+                </div>
+                <div class="sgcal">
+                    <p>Aggiungi a Google Calendar</p>
+                </div>
+            </div>
+            <div class="sgcard">
+                <div class="sgimg">
+                    <img src="tecwb.jpg" alt="Tecnologie Web"/>
+                </div><div class="sgdesc">
+                    <h5>Tecnologie Web</h5>
+                    <p>Tema: HTML</p>
+                    <p>Luogo: online</p>
+                    <p>Lingua: italiano</p>
+                    <p>Data: 12/12/2025</p>
+                    <p>Ora: 15:30</p>
+                </div><div class="sginvito">
+                    <p>Invita amici</p>
+                </div>
+                <div class="sgcal">
+                    <p>Aggiungi a Google Calendar</p>
+                </div>
+            </div>
+        </section>
+        <script src="script.js"></script>
+    </main>
+</html>

@@ -1,74 +1,54 @@
+header, body, h1{
+    margin: 0; 
+    padding: 0;
+}
+
 *{
-    font-family: Arial, sans-serif ;
+    font-family: Arial, sans-serif;
 }
-
-
-header,body{
-    margin : 0; 
-    padding : 0;
-}
-
 
 body{
     background-color: rgb(255, 255, 255);
     font-family: Arial, sans-serif;
-
 }
 
-header,footer{
+header, footer{
     background-color: #bb2e29;
-
+    color: #ffffff;
 }
 
-header img{
-     margin : 5px 5% ;
-     
-
+header div, header h1, header button{
+    display: inline-block;
 }
 
-header{
-    display : flex;
+header div{
+    width: 80%;
+    margin: 10px 0 10px 5%;
+    box-sizing: border-box;
 }
 
-header .lang-switch{
-    margin-left: 65%;
-
+header div img{
+    width: 60px;
+    height: 60px;
 }
 
-header .hamburger {
-    margin-left: 5%;
+header button{
+    width: 6%;
+    margin-right: 1.5%; 
 }
 
-.img-destra {
-    text-align: right;
-}
-
-.img-destra img {
-    
-    height: auto;
-    display: block;
-
-}
-
-
-
-div.descrizione,div.img-destra{
+main section.intro div{
     display:inline-block;
     vertical-align: top;
-    margin : 0 0 0 0;
-    padding: 0;
-
 }
 
-div.descrizione{
-    margin: 0 7.7% 0 2%;
+main div.descrizione{
+    margin: 0 8% 0 2%;
     width:40%;
     box-sizing: border-box;
-    
 }
 
-div.img-destra{
-    
+main section.intro div.img-destra{
     margin:0px 0% 20px 0%;
     width:50%;
     box-sizing: border-box;
@@ -76,11 +56,271 @@ div.img-destra{
     padding: 0;
 }
 
-div.img-destra img{
-
-    width : 100%;
+main section.intro div.img-destra img{
+    width: 100%;
     box-sizing: border-box;
-    padding : 0;
+    padding: 0;
 }
 
+/*css profilo*/
 
+main h2{
+    margin-left: 2%;
+    margin-top: 0px;
+    padding-top: 10px;
+}
+
+section.gest-utente, section.iscr-sg, section.el-cdl, section.esame, section.contatti {
+    margin: 0 1% 0 1%;
+}
+
+section.gest-utente h3, section.iscr-sg h3{
+    text-align: center;
+}
+
+section.gest-utente div, section.iscr-sg>div{
+    padding: 5px 1% 5px 1%;
+    margin-bottom: 10px;
+}
+
+section.gest-utente div, section.iscr-sg div{
+    background-color: #f2f2f2;
+}
+
+form ul{
+    list-style: none;
+    width: 80%;
+    margin: 0 10%;
+    padding: 0;  
+}
+
+form ul li:not(form ul li:last-child){
+    margin-bottom: 10px;
+}
+
+form ul li:last-child, section.gest-utente div ul li:last-child{
+    text-align: right;
+}
+
+form ul li label{
+    display: inline-block;
+    width: 50%;
+    text-align: left;
+    cursor: pointer;
+}
+
+form ul li input:not([type="submit"]), form ul li select{
+    width: 50%;
+    box-sizing: border-box;
+}
+
+form ul li input[type="submit"]{
+    cursor: pointer;
+    border-width: 0;
+    background-color: #bb2e29;
+    color: #ffffff;
+}
+
+input[type="button"]{
+    border-width: 0;
+    width: 100%;
+}
+
+div.sgcard div{
+    margin: 0 1% 0 1%
+}
+
+div.sgimg img{
+    width: 200px;
+    height: 200px;
+}
+
+div.sgimg{
+    width: 30%;
+    display: inline-block;
+}
+
+div.sgdesc{
+    width: 50%;
+    display: inline-block;
+}
+
+div.sginvito{
+    width: 10%;
+    display: inline-block;
+    vertical-align: bottom;
+}
+
+div.sginvito p, div.sgcal p{
+    text-align: right;
+}
+
+input[value="ʌ"], form#chgpwd, #chgcdl, #delacc, #x, #nav{
+    display: none;
+}
+
+nav{
+    position: absolute;
+    background-color: #bb2e29;
+    right: 0px;
+    z-index: 1;
+    padding-right: 30px;
+    text-align: right;
+}
+
+nav ul, div ul{
+    list-style: none;
+}
+
+nav ul li{
+    padding-top: 10px;
+}
+
+nav ul li a{
+    text-decoration: none;
+    color:#f2f2f2;
+}
+
+nav ul li a:hover, div ul li a:hover{
+    text-decoration: underline;
+}
+
+input[type="button"]{
+    cursor: pointer;
+}
+
+section>h2{
+    text-align: center;
+}
+
+div ul{
+    padding: 0;
+}
+
+div ul li a{
+    text-decoration: none;
+    color: black;
+}
+
+div#card-cdl, #card-esame {
+    display: flex;
+    background-color: #f2f2f2;
+    padding: 20px 2% 20px 2%;
+}
+
+div#card-img{
+    display: flex;
+}
+
+div#study-gr-anno ul{
+    background-color:#ffffff;
+}
+
+div#study-gr-anno ul li{
+    text-align: center;
+    font-weight: bold;
+    margin: 5px 0 5px 0;
+    padding: 10px 0 5px 0;
+    vertical-align: center;
+}
+
+div#card-img img, div#card-study-gr img, div#study-gr-anno ul div img{
+    max-width: 130px;
+    max-height: 130px;
+}
+
+div#card-cdl div#card-text, #card-esame div#card-text{
+    padding-left: 20px;
+    width: 100%;
+}
+
+.el-cdl div#study-gr-corso{
+    display: none;
+}
+
+div#study-gr-corso h3, div#study-gr-anno h3{
+    text-align: center;
+}
+
+div#study-gr-corso, div#study-gr-anno{
+    background-color: #f2f2f2;
+    padding: 20px 2% 20px 2%;
+    margin: 5px 0 5px 0;
+}
+
+div#card-study-gr{
+    background-color: #ffffff;
+    display: inline-block;
+    vertical-align: top;
+    padding: 10px 1% 10px 1%;
+    margin: 20px 5px 20px 5px;
+    width: 200px;
+    height: 380px;
+}
+
+div#study-gr-anno ul>div{
+    background-color:#ffffff;
+}
+
+.card-esami h4{
+    color: black;
+}
+
+.card-esami{
+    background-color: #f2f2f2;
+    display: inline-block;
+    vertical-align: top;
+    padding: 10px 1% 10px 1%;
+    margin: 20px 5px 20px 20px;
+    width: 200px;
+    height: 200px;
+    cursor: pointer;
+    border: 3px solid #f2f2f2
+}
+
+.card-esami:hover{
+    border: 3px solid #bb2e29;
+}
+
+.el-esami{
+    display: none;
+}
+
+#card-stGr-img, #add-stGr{
+    display: flex;
+    justify-content: center;
+}
+
+.esami-img{
+    display: flex;
+    justify-content: center;
+}
+
+div#study-gr-anno ul div h2{
+    text-align: center;
+}
+
+#part-stGr{
+    position: relative;
+    float: right;
+}
+
+#part-stGr img{
+    display: block;
+    z-index: 0;
+    width: 50px;
+    height: 50px;
+}
+
+#conta-part{
+    position: absolute;
+    top: 36%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    font-size: 13px;
+}
+
+#add-stGr{
+    margin: 70px 0 40px 0;
+}
