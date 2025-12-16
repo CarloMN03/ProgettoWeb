@@ -10,9 +10,18 @@
      <header>
         <div>
             <img src="logo.libro.png.PNG" alt="logo studybo libro"/><h1>StudyBo</h1>
-        </div><button class="lang-switch" type="button">IT</button><button class="hamburger" type ="button"></button>
+        </div><button class="lang-switch" type="button">IT</button><img src="hamburger icon.png" alt="apri hamburger menu" id="hamburger" onclick="openForm('x', 'nav', 'hamburger')"/><img src="x icon.png" alt="chiudi hamburger menu" id="x" onclick="closeForm('x', 'nav', 'hamburger')"/>
     </header>
     <main>
+        <nav id="nav">
+            <ul>
+                <li><a href="#">Accedi/Registrati</a></li>
+                <li><a href="elenco-cdl.html">Corsi di Laurea</a></li>
+                <li><a href="#">Study Group</a></li>
+                <li><a href="#">Risorse</a></li>
+                <li><a href="#">Contatti</a></li>
+            </ul>
+        </nav>
         <h2>Contatti</h2>
         <section class="contatti">
             <table>
@@ -20,13 +29,13 @@
                     <th id="amministratore">Amministratore</th><th id="email">Email</th>
                 </tr>
                 <tr>
-                    <th id="mariorossi">Mario Rossi</th><td headers="email mariorossi">mariorossi@studygroup.it</td>
+                    <th id="mariorossi">Mario Rossi</th><td headers="email mariorossi"><a href="mailto:mariorossi@studybo.it">mariorossi@studybo.it</a></td>
                 </tr>
                 <tr>    
-                    <th id="silviabianchi">Silvia Bianchi</th><td headers="email silviabianchi">silviabianchi@studygroup.it</td>
+                    <th id="silviabianchi">Silvia Bianchi</th><td headers="email silviabianchi"><a href="mailto:silviabianchi@studybo.it">silviabianchi@studybo.it</a></td>
                 </tr>
                 <tr>    
-                    <th id="francescosarti">Francesco Sarti</th><td headers="email francescosarti">francescosarti@studygroup.it</td>
+                    <th id="francescosarti">Francesco Sarti</th><td headers="email francescosarti"><a href="mailto:francescosarti@studybo.it">francescosarti@studybo.it</a></td>
                 </tr>
             </table>
         </section>

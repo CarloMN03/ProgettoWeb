@@ -10,9 +10,18 @@
      <header>
         <div>
             <img src="logo.libro.png.PNG" alt="logo studybo libro"/><h1>StudyBo</h1>
-        </div><button class="lang-switch" type="button">IT</button><button class="hamburger" type ="button"></button>
+            </div><button class="lang-switch" type="button">IT</button><img src="hamburger icon.png" alt="apri hamburger menu" id="hamburger" onclick="openForm('x', 'nav', 'hamburger')"/><img src="x icon.png" alt="chiudi hamburger menu" id="x" onclick="closeForm('x', 'nav', 'hamburger')"/>
     </header>
     <main>
+        <nav id="nav">
+            <ul>
+                <li><a href="#">Accedi/Registrati</a></li>
+                <li><a href="elenco-cdl.html">Corsi di Laurea</a></li>
+                <li><a href="#">Study Group</a></li>
+                <li><a href="#">Risorse</a></li>
+                <li><a href="#">Contatti</a></li>
+            </ul>
+        </nav>
         <section class="el-cdl">
             <h2>Corsi di Laurea con Study Group attivi</h2>
             <div id="card-cdl">
