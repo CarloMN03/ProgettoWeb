@@ -1,11 +1,12 @@
-<h2>Ciao <?php $templateParams["nomeuser"]; ?></h2>
+<h2>Ciao <?php echo $templateParams["nomeuser"]?></h2>
         <section class="gest-utente">
             <h3>Gestisci il tuo account</h3>
             <div class="changepwd">
                 <h4>Cambia Password</h4>
                 <?php if(isset($templateParams["errorepassword"])): ?>
                 <p><?php echo $templateParams["errorepassword"]; ?></p>
-                <form id="chgpwd" action="#" method="POST">
+                <?php endif; ?>
+                <form action="#" method="POST" id="chgpwd">
                     <ul>
                         <li>
                             <label for="oldPwd">Vecchia password: </label><input type="password" name="oldPwd" id="oldPwd"/>
@@ -28,13 +29,14 @@
                 <h4>Cambia Corso di Laurea</h4>
                 <?php if(isset($templateParams["errorecdl"])): ?>
                 <p><?php echo $templateParams["errorecdl"]; ?></p>
+                <?php endif; ?>
                 <form id="chgcdl" action="#" method="POST">
                     <ul>
                         <li>
                             <label for="newCdl">Scegli il nuovo Corso di Laurea: </label><select name="newCdl" id="newCdl">
                                 <option value=""></option>
-                                <?php foreach($templateParams["cdl"]) as $cdl: ?>
-                                <option value="<?php echo $cdl["id"]; ?>"><?php echo $cdl["nomecdl"]; ?></option>
+                                <?php foreach($templateParams["cdl"] as $cdl): ?>
+                                <option value="<?php echo $cdl["idcdl"]; ?>"><?php echo $cdl["nomecdl"]; ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </li>
@@ -50,6 +52,7 @@
                 <h4>Elimina Account</h4>
                 <?php if(isset($templateParams["erroredelete"])): ?>
                 <p><?php echo $templateParams["erroredelete"]; ?></p>
+                <?php endif; ?>
                 <form id="delacc" action="#" method="POST">
                     <ul>
                         <li>
@@ -69,23 +72,30 @@
             <?php foreach($templateParams["studygroupiscritto"] as $studygroupiscritto): ?>
             <div class="sgcard">
                 <div class="sgimg">
-                    <img src="<?php $studygroupiscritto["img"]; ?>" alt=""/>
+                    <img src="<?php echo UPLOAD_DIR . $studygroupiscritto["imgesame"]; ?>" alt=""/>
                 </div><div class="sgdesc">
                     <h5><?php echo $studygroupiscritto["nomeesame"]; ?></h5>
                     <ul>
-                        <li>Tema: <?php echo $studygroupiscritto["tema"]; ?></p></li>
-                        <li>Luogo: <?php echo $studygroupiscritto["luogo"]; ?></p></li>
-                        <li>Lingua: <?php echo $studygroupiscritto["lingua"]; ?></li>
+                        <li>Tema: <?php echo $studygroupiscritto["tema"]; ?></li>
+                        <li>Luogo: <?php echo $studygroupiscritto["luogo"]; ?></li>
+                        <li>Lingua: <?php echo $studygroupiscritto["descrizionelingua"]; ?></li>
                         <li>Data: <?php echo $studygroupiscritto["data"]; ?></li>
                         <li>Ora: <?php echo $studygroupiscritto["ora"]; ?></li>
                     </ul>
-                </div><div class="sginvito">
+                </div>
+                <div class="sginvito">
                     <p>Invita amici</p>
                 </div>
+                <div class="sgaccedi">
+                    <p>Accedi a Study Group</p>
+                </div>
+                <div class="sgdisiscrivi">
+                    <p>Disiscriviti</p>
+                </div>
                 <div class="sgcal">
-                    <p>Aggiungi a Google Calendar</p>
+                    <p><a href="https://www.google.com/calendar/event?action=TEMPLATE&dates=<?php echo substr($studygroupiscritto["data"],0,4) . substr($studygroupiscritto["data"],5,2) . substr($studygroupiscritto["data"],8,2) . "T" . substr($studygroupiscritto["ora"],0,2) . substr($studygroupiscritto["ora"],3,2) . "00"; ?>%2F<?php echo substr($studygroupiscritto["data"],0,4) . substr($studygroupiscritto["data"],5,2) . substr($studygroupiscritto["data"],8,2) . "T" . substr($studygroupiscritto["ora"],0,2) . substr($studygroupiscritto["ora"],3,2) . "00"; ?>&text=Studygroup%20<?php echo $studygroupiscritto["nomeesame"]; ?>%20Tema:%20<?php echo $studygroupiscritto["tema"]; ?>&location=<?php echo $studygroupiscritto["luogo"]; ?>&details=lingua:%20<?php echo $studygroupiscritto["descrizionelingua"]; ?>">Aggiungi a Google Calendar</a></p>
                 </div>
             </div>
             <?php endforeach; ?>
         </section>
-        <script src="script.js"></script>
+        <script src="js/script.js"></script>

@@ -162,7 +162,7 @@ div.sginvito{
     vertical-align: bottom;
 }
 
-div.sginvito p, div.sgcal p{
+div.sginvito p, div.sgcal p, div.sgaccedi p, div.sgdisiscrivi p{
     text-align: right;
 }
 
@@ -190,6 +190,12 @@ nav ul li{
 nav ul li a{
     text-decoration: none;
     color:#f2f2f2;
+}
+
+nav ul li:first-of-type {
+    color: #f2f2f2;
+    padding-bottom: 20px;
+    font-weight: bold;
 }
 
 nav ul li a:hover, div ul li a:hover{
@@ -235,7 +241,7 @@ div#study-gr-anno ul li{
     vertical-align: center;
 }
 
-div#card-img img, div#card-study-gr img, div#study-gr-anno ul div img{
+#card-img img, #card-stGr-img img, #study-gr-anno ul div img{
     max-width: 130px;
     max-height: 130px;
 }
@@ -245,21 +251,17 @@ div#card-cdl div#card-text, #card-esame div#card-text{
     width: 100%;
 }
 
-.el-cdl div#study-gr-corso{
-    display: none;
-}
-
-div#study-gr-corso h3, div#study-gr-anno h3{
+#study-gr-corso h3, #study-gr-anno h3{
     text-align: center;
 }
 
-div#study-gr-corso, div#study-gr-anno{
+#study-gr-corso, #study-gr-anno{
     background-color: #f2f2f2;
     padding: 20px 2% 20px 2%;
     margin: 5px 0 5px 0;
 }
 
-div#card-study-gr{
+#card-study-gr{
     background-color: #ffffff;
     display: inline-block;
     vertical-align: top;
@@ -267,9 +269,12 @@ div#card-study-gr{
     margin: 20px 5px 20px 5px;
     width: 200px;
     height: 380px;
+    cursor: pointer;
+    border: 3px solid #ffffff;
+    color: #000000;
 }
 
-div#study-gr-anno ul>div{
+#study-gr-anno ul>div{
     background-color:#ffffff;
 }
 
@@ -289,7 +294,7 @@ div#study-gr-anno ul>div{
     border: 3px solid #f2f2f2
 }
 
-.card-esami:hover{
+.card-esami:hover, #card-study-gr:hover{
     border: 3px solid #bb2e29;
 }
 

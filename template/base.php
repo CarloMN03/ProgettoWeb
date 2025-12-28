@@ -10,8 +10,10 @@
     <header>
         <div>
             <img src="./upload/logo.libro.png.PNG" alt="logo studybo libro"/><h1>StudyBo</h1>
-        </div><button class="lang-switch" type="button">IT</button><button class="hamburger" type ="button"></button>
+        </div><button class="lang-switch" type="button">IT</button><img src="./upload/hamburger icon.png" alt="apri hamburger menu" id="hamburger" onclick="openMenu('x', 'nav', 'hamburger', <?php echo $templateParams['amministratore']; ?>, '<?php echo $templateParams['nomeutente']; ?>')"/><img src="./upload/x icon.png" alt="chiudi hamburger menu" id="x" onclick="closeForm('x', 'nav', 'hamburger')"/>
     </header>
+    <nav id="nav">
+    </nav>
     <main>
     <?php
     if(isset($templateParams["nome"])){
@@ -23,26 +25,27 @@
             <ul>
             <?php foreach($templateParams["studygroupscadenza"] as $cardstudygr): ?>
                 <li>
-                    <div class="card-img"> <img src="<?php echo UPLOAD_DIR.$cardstudygr["imgstudygr"]; ?>" alt=""></div>
-                    <h3><?php echo $cardstudygr["nomecdl"]; ?></h3>
+                    <div class="card-img"> <img src="<?php echo UPLOAD_DIR.$cardstudygr["imgesame"]; ?>" alt=""></div>
+                    <h3><?php echo $cardstudygr["nomeesame"]; ?></h3>
                     <ul>
                         <li>
-                            Tema: <?php echo $cardstudygr["temastudygroup"]; ?>
+                            Tema: <?php echo $cardstudygr["tema"]; ?>
                         </li>
                         <li>
-                            Luogo: <?php echo $cardstudygr["luogostudygroup"]; ?>
+                            Luogo: <?php echo $cardstudygr["luogo"]; ?>
                         </li>
                         <li>
-                            Data: <?php echo $cardstudygr["datastudygroup"]; ?>
+                            Data: <?php echo $cardstudygr["data"]; ?>
                         </li>
                         <li>
-                            Ora: <?php echo $cardstudygr["orastudygroup"]; ?>
+                            Ora: <?php echo $cardstudygr["ora"]; ?>
                         </li>
                     </ul>
                 </li>
             <?php endforeach; ?>
             </ul>
     </aside>
+    <script src="./js/script.js"></script>
     <footer>
       <h4>Imapara meglio, insieme</h4>
       <p>Tutti diritti riservati, 2025</p>
