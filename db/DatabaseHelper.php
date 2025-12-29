@@ -118,14 +118,14 @@ class DatabaseHelper {
     // ==================== ESAME ====================
     
     public function getAllEsami(){
-        $stmt = $this->db->prepare("SELECT ID, Nome, cdl FROM esame ORDER BY Nome");
+        $stmt = $this->db->prepare("SELECT ID, Nome, Professore, Anno, cdl FROM esame ORDER BY Nome");
         $stmt->execute();
         $result = $stmt->get_result();
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
     public function getEsamiByCdl($idCdl){
-        $stmt = $this->db->prepare("SELECT ID, Nome, cdl FROM esame WHERE cdl = ? ORDER BY Nome");
+        $stmt = $this->db->prepare("SELECT ID, Nome, Professore, Anno, cdl FROM esame WHERE cdl = ? ORDER BY Nome");
         $stmt->bind_param('i', $idCdl);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -133,25 +133,25 @@ class DatabaseHelper {
     }
 
     public function getEsameById($id){
-        $stmt = $this->db->prepare("SELECT ID, Nome, cdl FROM esame WHERE ID = ?");
+        $stmt = $this->db->prepare("SELECT ID, Nome, Professore, Anno, cdl FROM esame WHERE ID = ?");
         $stmt->bind_param('i', $id);
         $stmt->execute();
         $result = $stmt->get_result();
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
-    public function insertEsame($nome, $idCdl){
-        $query = "INSERT INTO esame (Nome, cdl) VALUES (?, ?)";
+    public function insertEsame($nome, $professore, $anno, $idCdl){
+        $query = "INSERT INTO esame (Nome, Professore, Anno, cdl) VALUES (?, ?, ?, ?)";
         $stmt = $this->db->prepare($query);
-        $stmt->bind_param('si', $nome, $idCdl);
+        $stmt->bind_param('ssii', $nome, $professore, $anno, $idCdl);
         $stmt->execute();
         return $stmt->insert_id;
     }
 
-    public function updateEsame($id, $nome, $idCdl){
-        $query = "UPDATE esame SET Nome = ?, cdl = ? WHERE ID = ?";
+    public function updateEsame($id, $nome, $professore, $anno, $idCdl){
+        $query = "UPDATE esame SET Nome = ?, Professore = ?, Anno = ?, cdl = ? WHERE ID = ?";
         $stmt = $this->db->prepare($query);
-        $stmt->bind_param('sii', $nome, $idCdl, $id);
+        $stmt->bind_param('ssii', $nome, $professore, $anno, $idCdl, $id);
         return $stmt->execute();
     }
 

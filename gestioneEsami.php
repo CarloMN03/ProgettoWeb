@@ -21,10 +21,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Aggiungi nuovo esame
     if (isset($_POST['azione']) && $_POST['azione'] === 'aggiungi') {
         $nome = trim($_POST['nome'] ?? '');
+        $professore = trim($_POST['professore'] ?? '');
+        $anno = intval($_POST['anno'] ?? 0);
         $cdl = intval($_POST['cdl'] ?? 0);
         
-        if (!empty($nome) && $cdl > 0) {
-            $result = $db->insertEsame($nome, $cdl);
+        if (!empty($nome) && !empty($professore) && $anno > 0 && $cdl > 0) {
+            $result = $db->insertEsame($nome, $professore, $anno, $cdl);
             if ($result) {
                 $messaggio = 'Esame aggiunto con successo!';
             } else {
@@ -52,10 +54,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['azione']) && $_POST['azione'] === 'modifica') {
         $id = intval($_POST['id'] ?? 0);
         $nome = trim($_POST['nome'] ?? '');
+        $professore = trim($_POST['professore'] ?? '');
+        $anno = intval($_POST['anno'] ?? 0);
         $cdl = intval($_POST['cdl'] ?? 0);
         
-        if ($id > 0 && !empty($nome) && $cdl > 0) {
-            $result = $db->updateEsame($id, $nome, $cdl);
+        if ($id > 0 && !empty($nome) && !empty($professore) && $anno > 0 && $cdl > 0) {
+            $result = $db->updateEsame($id, $nome, $professore, $anno, $cdl);
             if ($result) {
                 $messaggio = 'Esame modificato con successo!';
             } else {
@@ -159,6 +163,8 @@ foreach ($corsiLaurea as $cdl) {
                         <?php foreach ($esamiPerCdl[$cdl['ID']] as $esame): ?>
                             <div class="card <?php echo ($editing && $editing['ID'] === $esame['ID']) ? 'editing' : ''; ?>">
                                 <h3><?php echo htmlspecialchars($esame['Nome']); ?></h3>
+                                <p><strong>Prof. </strong> <?php echo htmlspecialchars($esame['Professore']); ?></p>
+                                <p><strong>Anno:</strong> <?php echo intval($esame['Anno']); ?></p>
                                 <div class="card-buttons">
                                     <a href="?edit=<?php echo $esame['ID']; ?>">
                                         <button class="btn-edit" type="button">Modifica</button>
@@ -191,6 +197,18 @@ foreach ($corsiLaurea as $cdl) {
                            value="<?php echo $editing ? htmlspecialchars($editing['Nome']) : ''; ?>" 
                            required>
 
+                    <label for="professore">Prof.</label>
+                    <input type="text" id="professore" name="professore" 
+                           placeholder="Inserisci nome del professore" 
+                           value="<?php echo $editing ? htmlspecialchars($editing['Professore']) : ''; ?>" 
+                           required>
+
+                    <label for="anno">Anno di Corso</label>
+                    <input type="text" id="anno" name="anno" 
+                           placeholder="Inserisci l'anno in cui si svolge il corso" 
+                           value="<?php echo $editing ? htmlspecialchars($editing['Anno']) : ''; ?>" 
+                           required>
+                    
                     <label for="cdl">Corso di Laurea</label>
                     <select id="cdl" name="cdl" required>
                         <option value="">-- Seleziona un Corso di Laurea --</option>
