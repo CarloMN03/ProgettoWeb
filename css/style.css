@@ -89,14 +89,45 @@ section.gest-utente h3, section.iscr-sg h3{
     text-align: center;
 }
 
-section.gest-utente div, section.iscr-sg>div{
+section.gest-utente div{
     padding: 5px 1% 5px 1%;
     margin-bottom: 10px;
 }
 
-section.gest-utente div, section.iscr-sg div{
+section.gest-utente div{
     background-color: #f2f2f2;
 }
+
+.sgcard{
+    display: flex;
+    width: 500px;
+    background-color: #f2f2f2;
+    padding: 10px;
+    justify-content: space-around;
+    border-radius: 10px;
+    border: 1px solid #dddddd;
+    margin: 20px;
+    align-items: center;
+}
+
+.sgdesc ul li:last-of-type, .sgdesc ul li:nth-last-child(2){
+    text-align: right;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.sgdesc ul li a:hover{
+    color:#bb2e29;
+}
+
+.el-sgcard{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+
+
 
 form ul{
     list-style: none;
@@ -146,16 +177,6 @@ div.sgimg img{
     height: 200px;
 }
 
-div.sgimg{
-    width: 30%;
-    display: inline-block;
-}
-
-div.sgdesc{
-    width: 50%;
-    display: inline-block;
-}
-
 div.sginvito{
     width: 10%;
     display: inline-block;
@@ -166,11 +187,11 @@ div.sginvito p, div.sgcal p, div.sgaccedi p, div.sgdisiscrivi p{
     text-align: right;
 }
 
-input[value="ʌ"], form#chgpwd, #chgcdl, #delacc, #x, #nav{
+input[value="ʌ"], form#chgpwd, #chgcdl, #chgana, #delacc, #x, #nav-principale{
     display: none;
 }
 
-nav{
+#nav-principale{
     position: absolute;
     background-color: #bb2e29;
     right: 0px;
@@ -187,18 +208,18 @@ nav ul li{
     padding-top: 10px;
 }
 
-nav ul li a{
+#nav-principale ul li a{
     text-decoration: none;
     color:#f2f2f2;
 }
 
-nav ul li:first-of-type {
+#nav-principale ul li:first-of-type {
     color: #f2f2f2;
     padding-bottom: 20px;
     font-weight: bold;
 }
 
-nav ul li a:hover, div ul li a:hover{
+#nav-principale ul li a:hover, div ul li a:hover{
     text-decoration: underline;
 }
 
@@ -223,6 +244,7 @@ div#card-cdl, #card-esame {
     display: flex;
     background-color: #f2f2f2;
     padding: 20px 2% 20px 2%;
+    align-items: center;
 }
 
 div#card-img{
@@ -355,4 +377,185 @@ table th, table td{
 
 table tr{
     text-align: center;
+}
+
+#partecipanti form input{
+    display: none;
+}
+
+#nav-sg ul{
+    display: flex;
+    justify-content: space-around;
+}
+
+#nav-sg ul li{
+    width: 150px;
+    margin: 10px 0 10px 0;
+    text-align: center;
+    background-color: #bb2e29; 
+    border-radius: 10px;
+    padding: 0;
+}
+
+#nav-sg ul{
+    padding-inline-start: 0;
+}
+
+#nav-sg ul li a{
+    display: inline-block;
+    width:100%;
+    height: 100%;
+    text-decoration: none;
+    color: #ffffff;
+    vertical-align: center;
+    padding: 10px 0 10px 0;
+}
+
+#nav-principale ul li a:hover, div ul li a:hover, #nav-sg ul li a:hover{
+    text-decoration: underline;
+}
+
+.sg, .msg, .risorse-sg{
+    padding: 0 2% 0 2%;
+}
+
+#card-text ul li form{
+    display: inline-block;
+}
+
+#sg-anag{
+    display: none;
+}
+
+.button ul li{
+    display: inline-block;
+    margin-right: 10px;
+}
+
+/*studygroupsg*/
+
+#nav-sg ul{
+    margin: 16px 0 0 0;
+}
+
+.dettaglio-sg, .elenco-partecipanti, .carica-ris, .elenco-ris, .struttura-msg, .nuovo-msg, #newsg{
+    padding: 5px 2% 20px 2%;
+    margin: 5px 1% 20px 1%;
+    border-radius: 10px;
+    background-color: #f2f2f2;
+    border: 1px solid #dddddd;
+}
+
+.elenco-partecipanti h3, .risorse-sg h3, .struttura-msg h3, .nuovo-msg h3, #newsg h3{
+    text-align: center;
+}
+/*messaggi*/
+
+ul{
+    list-style: none;
+}
+
+.card-partecipanti ul li:first-of-type, .img-msg{
+    border-radius: 100%;
+    width: 40px;
+    height: 40px;
+    background-color: #bb2e29;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.imguser{
+    border-radius: 100%;
+    width: 40px;
+    height: 40px;
+}
+
+.el-msg, #crea-msg{
+    display: flex;
+    align-items: top;
+}
+
+.user-msg{
+    display: flex;
+    font-size: 15px;
+}
+
+.email{
+    width: 30px;
+    height: 30px;
+}
+
+.card-msg, .card-nuovomsg{
+    border-radius: 10px;
+    background-color: #ffffff;
+    border: 1px solid #bb2e29;
+    padding: 0 20px 0 20px;
+    margin: 0 20px 20px 10px;
+}
+
+.card-nuovomsg{
+    width: 90%;
+}
+
+.card-nuovomsg ul li label{
+    width: 20%;
+}
+
+.card-nuovomsg ul li input:not([type="submit"]){
+    width: 80%;
+}
+
+.card-nuovomsg ul li:last-of-type{
+    padding-bottom: 20px;
+}
+
+.card-msg h4, .card-msg p{
+    margin: 10px 0 8px 0;    
+}
+
+.card-msg p{
+    margin: 0 0 10px 0;
+}
+
+.card-partecipanti ul{
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid black;
+    border-radius: 10px;
+    align-items: center;
+    padding: 0 20px 0 20px;
+    margin: 15px;
+    background-color: #ffffff;
+}
+
+.card-partecipanti{
+    width: 350px;
+    display: inline-block;
+}
+
+#partecipanti{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/*risorse sg*/
+
+.tabella-ris{
+    display: flex;
+    justify-content: center;
+}
+
+.elenco-ris table{
+    background-color: #ffffff;
+    width: 80%;
+}
+
+#meet, #teams, #discord{
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    margin: 0 5px 0;
 }

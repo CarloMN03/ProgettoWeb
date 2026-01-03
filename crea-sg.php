@@ -10,8 +10,8 @@ if(isset($_SESSION["username"]) && isset($_GET["idcdl"]) && isset($_GET["idesame
     if(empty($templateParams["idultimosg"])){
         $templateParams["idultimosg"] = 1;
     }
-    if(isset($_GET["idcdl"]) && isset($_GET["idesame"]) && isset($_POST["lingua"]) && isset($_POST["tema"]) && isset($_POST["luogo"]) && isset($_POST["data"]) && isset($_POST["ora"]) && isset($_SESSION["username"])){
-        $templateParams["ritorno-creasg"] = $dbh->setSg($_GET["idcdl"], $_GET["idesame"], $templateParams["idultimosg"], $_POST["lingua"], $_POST["tema"], $_POST["luogo"], $_POST["data"], $_POST["ora"]);
+    if(isset($_GET["idcdl"]) && isset($_GET["idesame"]) && isset($_POST["lingua"]) && isset($_POST["tema"]) && isset($_POST["luogo"]) && isset($_POST["dettaglioluogo"])&& isset($_POST["data"]) && isset($_POST["ora"]) && isset($_SESSION["username"])){
+        $templateParams["ritorno-creasg"] = $dbh->setSg($_GET["idcdl"], $_GET["idesame"], $templateParams["idultimosg"], $_POST["lingua"], $_POST["tema"], $_POST["luogo"], $_POST["dettaglioluogo"], $_POST["data"], $_POST["ora"]);
         $templateParams["ritorno-adesione"] = $dbh->setAdesione($_GET["idcdl"], $_GET["idesame"], $templateParams["idultimosg"], $_SESSION["username"]);
     }
     
@@ -23,7 +23,7 @@ if(isset($_SESSION["username"])){
     $templateParams["amministratore"] = $dbh->isAdmin($_SESSION["username"])[0]["amministratore"];
     $templateParams["nomeutente"] = $dbh->getNameUser($_SESSION["username"])[0]["nome"];
 } else {
-    $templateParams["amministratore"] = "";
+    $templateParams["amministratore"] = 9;
     $templateParams["nomeutente"] = "";
 }
 $templateParams["studygroupscadenza"] = $dbh->getStGrScad();

@@ -1,6 +1,29 @@
 <h2>Ciao <?php echo $templateParams["nomeuser"]?></h2>
         <section class="gest-utente">
             <h3>Gestisci il tuo account</h3>
+            <div class="changeanag">
+                <h4>Variazione dati personali</h4>
+                <?php if(isset($msg)): ?>
+                <h4><?php echo $msg; ?></h4>
+                <?php endif; ?>
+                <form action="#" method="POST" id="chgana" enctype="multipart/form-data">
+                    <ul>
+                        <li>
+                            <label for="nome">Nome: </label><input type="text" name="nome", id="nome" value="<?php echo $templateParams["nomeuser"]; ?>"/>
+                        </li>
+                        <li>
+                            <label for="cognome">Cognome: </label><input type="text" name="cognome" id="cognome" value="<?php echo $templateParams["cognomeuser"]; ?>">
+                        </li>
+                        <li><label for="imguser">Immagine Profilo: </label><input type="file" id="imguser" name="imguser"/>
+                        </li>
+                        <li>
+                            <input type="submit" name="submit" value="Invia"/>
+                        </li>
+                    </ul>
+                </form>
+                <input type="button" id="closeana" value="ʌ" onclick="closeForm('closeana', 'chgana', 'openana')">
+                <input type="button" id="openana" value="v" onclick="openForm('closeana', 'chgana', 'openana')">
+            </div>
             <div class="changepwd">
                 <h4>Cambia Password</h4>
                 <?php if(isset($templateParams["errorepassword"])): ?>
@@ -69,33 +92,36 @@
         </section>
         <section class="iscr-sg">
             <h3>Study Group ai quali sei iscritto</h3>
-            <?php foreach($templateParams["studygroupiscritto"] as $studygroupiscritto): ?>
-            <div class="sgcard">
-                <div class="sgimg">
-                    <img src="<?php echo UPLOAD_DIR . $studygroupiscritto["imgesame"]; ?>" alt=""/>
-                </div><div class="sgdesc">
-                    <h5><?php echo $studygroupiscritto["nomeesame"]; ?></h5>
-                    <ul>
-                        <li>Tema: <?php echo $studygroupiscritto["tema"]; ?></li>
-                        <li>Luogo: <?php echo $studygroupiscritto["luogo"]; ?></li>
-                        <li>Lingua: <?php echo $studygroupiscritto["descrizionelingua"]; ?></li>
-                        <li>Data: <?php echo $studygroupiscritto["data"]; ?></li>
-                        <li>Ora: <?php echo $studygroupiscritto["ora"]; ?></li>
-                    </ul>
-                </div>
-                <div class="sginvito">
-                    <p>Invita amici</p>
-                </div>
-                <div class="sgaccedi">
-                    <p>Accedi a Study Group</p>
-                </div>
-                <div class="sgdisiscrivi">
-                    <p>Disiscriviti</p>
-                </div>
-                <div class="sgcal">
-                    <p><a href="https://www.google.com/calendar/event?action=TEMPLATE&dates=<?php echo substr($studygroupiscritto["data"],0,4) . substr($studygroupiscritto["data"],5,2) . substr($studygroupiscritto["data"],8,2) . "T" . substr($studygroupiscritto["ora"],0,2) . substr($studygroupiscritto["ora"],3,2) . "00"; ?>%2F<?php echo substr($studygroupiscritto["data"],0,4) . substr($studygroupiscritto["data"],5,2) . substr($studygroupiscritto["data"],8,2) . "T" . substr($studygroupiscritto["ora"],0,2) . substr($studygroupiscritto["ora"],3,2) . "00"; ?>&text=Studygroup%20<?php echo $studygroupiscritto["nomeesame"]; ?>%20Tema:%20<?php echo $studygroupiscritto["tema"]; ?>&location=<?php echo $studygroupiscritto["luogo"]; ?>&details=lingua:%20<?php echo $studygroupiscritto["descrizionelingua"]; ?>">Aggiungi a Google Calendar</a></p>
-                </div>
-            </div>
+            <div class="el-sgcard">
+                <?php if(isset($templateParams["ritorno-disiscrivi"])): ?>
+                    <h4><?php echo $templateParams["ritorno-disiscrivi"]; ?></h4>
+                <?php endif; ?>
+                <?php foreach($templateParams["studygroupiscritto"] as $studygroupiscritto): ?>
+                    <div class="sgcard">
+                        <div class="sgimg">
+                            <img src="<?php echo UPLOAD_DIR . $studygroupiscritto["imgesame"]; ?>" alt=""/>
+                        </div><div class="sgdesc">
+                            <h4><?php echo $studygroupiscritto["nomeesame"]; ?></h4>
+                            <ul>
+                                <li>Tema: <?php echo $studygroupiscritto["tema"]; ?></li>
+                                <li>Luogo: <?php echo $studygroupiscritto["luogo"]; ?></li>
+                                <li>Dettaglio luogo: <?php if($studygroupiscritto["luogo"]=="Online"): ?>
+                                    <a href="<?php echo $studygroupiscritto["dettaglioluogo"]; ?>" target="_blank">Accedi al link</a>
+                                <?php else: ?>
+                                    <?php echo $studygroupiscritto["dettaglioluogo"]; ?>
+                                <?php endif; ?>
+                                </li>
+                                <li>Lingua: <?php echo $studygroupiscritto["descrizionelingua"]; ?></li>
+                                <li>Data: <?php echo $studygroupiscritto["data"]; ?></li>
+                                <li>Ora: <?php echo $studygroupiscritto["ora"]; ?></li>
+                                <li><a href="studygroup.php?idcdl=<?php echo $studygroupiscritto["idcdl"]; ?>&idesame=<?php echo $studygroupiscritto["idesame"]; ?>&idstudygroup=<?php echo $studygroupiscritto["idstudygroup"]; ?>">Accedi</a></li>
+                                <li><a href="https://www.google.com/calendar/event?action=TEMPLATE&dates=<?php echo substr($studygroupiscritto["data"],0,4) . substr($studygroupiscritto["data"],5,2) . substr($studygroupiscritto["data"],8,2) . "T" . substr($studygroupiscritto["ora"],0,2) . substr($studygroupiscritto["ora"],3,2) . "00"; ?>%2F<?php echo substr($studygroupiscritto["data"],0,4) . substr($studygroupiscritto["data"],5,2) . substr($studygroupiscritto["data"],8,2) . "T" . substr($studygroupiscritto["ora"],0,2) . substr($studygroupiscritto["ora"],3,2) . "00"; ?>&text=Studygroup%20<?php echo $studygroupiscritto["nomeesame"]; ?>%20Tema:%20<?php echo $studygroupiscritto["tema"]; ?>&location=<?php echo $studygroupiscritto["dettaglioluogo"]; ?>&details=lingua:%20<?php echo $studygroupiscritto["descrizionelingua"]; ?>">Aggiungi a Google Calendar</a></li>
+                            </ul>
+                        </div>
+
+                    </div>
+                
             <?php endforeach; ?>
+            </div>
         </section>
         <script src="js/script.js"></script>

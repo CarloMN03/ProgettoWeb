@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="it">
+    <head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="style.css"/>
+    <title>StudyBo - Elenco Corsi di Laurea</title>
+</head>
+<body>
+     <header>
+        <div>
+            <img src="logo.libro.png.PNG" alt="logo studybo libro"/><h1>StudyBo</h1>
+            </div><button class="lang-switch" type="button">IT</button><img src="hamburger icon.png" alt="apri hamburger menu" id="hamburger" onclick="openForm('x', 'nav', 'hamburger')"/><img src="x icon.png" alt="chiudi hamburger menu" id="x" onclick="closeForm('x', 'nav', 'hamburger')"/>
+    </header>
+    <main>
+        <nav id="nav">
+            <ul>
+                <li><a href="#">Accedi/Registrati</a></li>
+                <li><a href="elenco-cdl.html">Corsi di Laurea</a></li>
+                <li><a href="#">Study Group</a></li>
+                <li><a href="#">Risorse</a></li>
+                <li><a href="contatti.php">Contatti</a></li>
+            </ul>
+        </nav>
+        <section class="el-cdl">
+            <h2>Corsi di Laurea con Study Group attivi</h2>
+            <div id="card-cdl">
+                <div id="card-img"><img src="p1.jpg" alt="computer"></div>
+                <div id="card-text">
+                    <h3>Laurea Ingegneria e Scienze Informatiche</h3>
+                    <ul>
+                        <li>Campus: Cesena</li>
+                        <li>Esami con Study Group: 14</li>
+                    </ul>
+                </div>
+            </div>
+            <div id="study-gr-anno">
+                <h3>Esami con Study Group attivi</h3>
+                <ul>
+                    <li>Primo anno</li>
+                    <div class="el-esami" id="esami-1a-inginf">
+                        <a href="esame.html"><div class="card-esami">
+                            <div class="esami-img">
+                                <img src="po.png" alt="codice"/>
+                            </div>
+                            <h4>Programmazione ad oggetti</h4>
+                        </div></a>
+                        <div class="card-esami">
+                            <div class="esami-img">
+                                <img src="po.png" alt="codice"/>
+                            </div>
+                            <h4>Programmazione ad oggetti</h4>
+                        </div>
+                    </div>
+                    <li><input type="button" id="close1ainginf" value="ʌ" onclick="closeForm('close1ainginf', 'esami-1a-inginf', 'open1ainginf')">
+                    <input type="button" id="open1ainginf" value="v" onclick="openForm('close1ainginf', 'esami-1a-inginf', 'open1ainginf')"></li>
+                    <li>Secondo anno</li>
+                    <div class="el-esami" id="esami-2a-inginf">
+                        <div class="card-esami">
+                            <div class="esami-img">
+                                <img src="po.png" alt="codice"/>
+                            </div>
+                            <h4>Programmazione ad oggetti</h4>
+                        </div>
+                        <div class="card-esami">
+                            <div class="esami-img">
+                                <img src="po.png" alt="codice"/>
+                            </div>
+                            <h4>Programmazione ad oggetti</h4>
+                        </div>
+                    </div>
+                    <li><input type="button" id="close2ainginf" value="ʌ" onclick="closeForm('close2ainginf', 'esami-2a-inginf', 'open2ainginf')">
+                    <input type="button" id="open2ainginf" value="v" onclick="openForm('close2ainginf', 'esami-2a-inginf', 'open2ainginf')"></li>
+                    <li>Terzo anno</li>
+                    <div class="el-esami" id="esami-3a-inginf">
+                        <div class="card-esami">
+                            <div class="esami-img">
+                                <img src="po.png" alt="codice"/>
+                            </div>
+                            <h4>Programmazione ad oggetti</h4>
+                        </div>
+                        <div class="card-esami">
+                            <div class="esami-img">
+                                <img src="po.png" alt="codice"/>
+                            </div>
+                            <h4>Programmazione ad oggetti</h4>
+                        </div>
+                    </div>
+                    <li><input type="button" id="close3ainginf" value="ʌ" onclick="closeForm('close3ainginf', 'esami-3a-inginf', 'open3ainginf')">
+                    <input type="button" id="open3ainginf" value="v" onclick="openForm('close3ainginf', 'esami-3a-inginf', 'open3ainginf')"></li>
+                </ul>
+            </div>  
+        </section>
+        <script src="script.js"></script>
+    </main>
+    <footer>
+        <h4>Imapara meglio, insieme</h4>
+        <p>Tutti diritti riservati,2025</p>
+    </footer>
+</body>
+</html>

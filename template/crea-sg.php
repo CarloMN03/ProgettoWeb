@@ -1,6 +1,7 @@
 <section>
-    <h2>Crea un nuovo Study Group per l'esame di <?php echo $templateParams["esame"][0]["nomeesame"]; ?></h2>
+    <h2>Study Group per l'esame di <?php echo $templateParams["esame"][0]["nomeesame"]; ?></h2>
     <form action="#" method="POST" id="newsg">
+        <h3>Crea un nuovo Study Group</h3>
         <?php if(isset($templateParams["ritorno-creasg"])): ?>
             <p><?php echo $templateParams["ritorno-creasg"]; ?></p>
         <?php endif; ?>
@@ -12,7 +13,9 @@
                 <label for="tema">Tema: </label><input type="text" name="tema" id="tema"/>
             </li>
             <li>
-                <label for="luogo">Luogo: </label><input type="text" name="luogo" id="luogo"/>
+                <label for="luogo">Luogo: </label><select name="luogo" id="luogo" onchange="addDesc('#newsg')"><option value="">--Seleziona un luogo--</option><option value="Online">Online</option><option value="Fisico">In fisico</option></select>
+            </li>
+            <li>
             </li>
             <li>
                 <label for="data">Data: </label><input type="date" name="data" id="data"/>

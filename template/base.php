@@ -10,9 +10,9 @@
     <header>
         <div>
             <img src="./upload/logo.libro.png.PNG" alt="logo studybo libro"/><h1>StudyBo</h1>
-        </div><button class="lang-switch" type="button">IT</button><img src="./upload/hamburger icon.png" alt="apri hamburger menu" id="hamburger" onclick="openMenu('x', 'nav', 'hamburger', <?php echo $templateParams['amministratore']; ?>, '<?php echo $templateParams['nomeutente']; ?>')"/><img src="./upload/x icon.png" alt="chiudi hamburger menu" id="x" onclick="closeForm('x', 'nav', 'hamburger')"/>
+        </div><button class="lang-switch" type="button">IT</button><img src="./upload/hamburger icon.png" alt="apri hamburger menu" id="hamburger" onclick="openMenu('x', 'nav-principale', 'hamburger', <?php echo $templateParams['amministratore']; ?>, '<?php echo $templateParams['nomeutente']; ?>')"/><img src="./upload/x icon.png" alt="chiudi hamburger menu" id="x" onclick="closeForm('x', 'nav-principale', 'hamburger')"/>
     </header>
-    <nav id="nav">
+    <nav id="nav-principale">
     </nav>
     <main>
     <?php

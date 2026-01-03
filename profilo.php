@@ -2,12 +2,15 @@
 require_once 'bootstrap.php';
 
 //da eliminare quando viene fatta la pagina login
+$_SESSION["username"] = "lucia.rossi";
 
-$_SESSION["username"] = "samanta.rossi";
-
-if(isset($_SESSION["username"])){
+if(isset($_GET["logout"])){
+    session_unset();
+    $templateParams["nome"] = "profilo-ko.php";
+} else if(isset($_SESSION["username"])){
     $templateParams["nome"] = "profilo.php";
     $templateParams["nomeuser"] = $dbh->getNameUser($_SESSION["username"])[0]["nome"];
+    $templateParams["cognomeuser"] = $dbh->getNameUser($_SESSION["username"])[0]["cognome"];
     $templateParams["cdl"] = $dbh->getCdl();
     $templateParams["studygroupiscritto"] = $dbh->getStGrUtente($_SESSION["username"]);
 
@@ -42,6 +45,24 @@ if(isset($_SESSION["username"])){
         }
     }
 
+    if(isset($_POST["nome"]) && isset($_POST["cognome"])){
+        if(isset($_FILES["imguser"])){
+            list($result, $msg) = uploadImage(UPLOAD_DIR, $_FILES["imguser"]);
+            if($result != 0){
+                $risorsa = $msg;
+                $id = $dbh->updateAnag($_SESSION["username"], $_POST["nome"], $_POST["cognome"], $risorsa);
+                if($id!=false){
+                    $msg = "Aggiornamento effettuato correttamente!";
+                }
+                else{
+                    $msg = "Errore in aggiornamento!";
+                }
+            }
+        } else {
+            $msg = $dbh->updateAnag2($_SESSION["username"], $_POST["nome"], $_POST["cognome"]);
+        }
+    }
+
 } else {
     $templateParams["nome"] = "profilo-ko.php";
 }
@@ -52,7 +73,7 @@ if(isset($_SESSION["username"])){
     $templateParams["amministratore"] = $dbh->isAdmin($_SESSION["username"])[0]["amministratore"];
     $templateParams["nomeutente"] = $dbh->getNameUser($_SESSION["username"])[0]["nome"];
 } else {
-    $templateParams["amministratore"] = "";
+    $templateParams["amministratore"] = 9;
     $templateParams["nomeutente"] = "";
 }
 

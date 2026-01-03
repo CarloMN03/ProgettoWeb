@@ -9,7 +9,7 @@ if(isset($_SESSION["username"])){
     $templateParams["amministratore"] = $dbh->isAdmin($_SESSION["username"])[0]["amministratore"];
     $templateParams["nomeutente"] = $dbh->getNameUser($_SESSION["username"])[0]["nome"];
 } else {
-    $templateParams["amministratore"] = "";
+    $templateParams["amministratore"] = 9;
     $templateParams["nomeutente"] = "";
 }
 
