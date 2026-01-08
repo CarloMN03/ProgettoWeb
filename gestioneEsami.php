@@ -1,24 +1,17 @@
 <?php
-// esami.php - Sistema di gestione esami
-
-// Includi il DatabaseHelper
 require_once 'db/DatabaseHelper.php';
 require_once 'db/config.php';
 
-// Inizializza la connessione al database
 $db = new DatabaseHelper(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_PORT);
 
-// Inizializza la sessione
 session_start();
 
-// Gestione delle operazioni
 $messaggio = '';
 $errore = '';
 $editing = null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
-    // Aggiungi nuovo esame
     if (isset($_POST['azione']) && $_POST['azione'] === 'aggiungi') {
         $nome = trim($_POST['nome'] ?? '');
         $professore = trim($_POST['professore'] ?? '');
@@ -37,7 +30,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
     
-    // Elimina esame
     if (isset($_POST['azione']) && $_POST['azione'] === 'elimina') {
         $id = intval($_POST['id'] ?? 0);
         if ($id > 0) {
@@ -50,7 +42,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
     
-    // Modifica esame
     if (isset($_POST['azione']) && $_POST['azione'] === 'modifica') {
         $id = intval($_POST['id'] ?? 0);
         $nome = trim($_POST['nome'] ?? '');
@@ -69,13 +60,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $errore = 'Errore durante la modifica dell\'esame.';
         }
     }
-    
-    // Redirect per evitare re-submit del form
+ 
     header('Location: ' . $_SERVER['PHP_SELF'] . ($messaggio ? '?msg=' . urlencode($messaggio) : '') . ($errore ? '?err=' . urlencode($errore) : ''));
     exit;
 }
 
-// Gestione modalità modifica
 if (isset($_GET['edit'])) {
     $edit_id = intval($_GET['edit']);
     $esame = $db->getEsameById($edit_id);
@@ -84,7 +73,6 @@ if (isset($_GET['edit'])) {
     }
 }
 
-// Recupera messaggi dalla query string
 if (isset($_GET['msg'])) {
     $messaggio = htmlspecialchars($_GET['msg']);
 }
@@ -92,11 +80,9 @@ if (isset($_GET['err'])) {
     $errore = htmlspecialchars($_GET['err']);
 }
 
-// Recupera tutti i CDL e gli esami dal database
 $corsiLaurea = $db->getAllCdl();
 $esami = $db->getAllEsami();
 
-// Organizza gli esami per CDL
 $esamiPerCdl = [];
 foreach ($esami as $esame) {
     $idCdl = $esame['cdl'];
@@ -106,7 +92,6 @@ foreach ($esami as $esame) {
     $esamiPerCdl[$idCdl][] = $esame;
 }
 
-// Crea un array associativo dei CDL per accesso rapido
 $cdlMap = [];
 foreach ($corsiLaurea as $cdl) {
     $cdlMap[$cdl['ID']] = $cdl;
@@ -117,7 +102,7 @@ foreach ($corsiLaurea as $cdl) {
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
     <title>StudyBo - Gestione Esami</title>
 </head>
 

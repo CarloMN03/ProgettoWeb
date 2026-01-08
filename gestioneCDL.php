@@ -1,24 +1,17 @@
 <?php
-// gestioneCDL.php - Sistema di gestione corsi di laurea
-
-// Includi il DatabaseHelper
 require_once 'db/DatabaseHelper.php';
 require_once 'db/config.php';
 
-// Inizializza la connessione al database
 $db = new DatabaseHelper(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_PORT);
 
-// Inizializza la sessione
 session_start();
 
-// Gestione delle operazioni
 $messaggio = '';
 $errore = '';
 $editing = null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
-    // Aggiungi nuovo corso
     if (isset($_POST['azione']) && $_POST['azione'] === 'aggiungi') {
         $nome = trim($_POST['nome'] ?? '');
         $campus = trim($_POST['campus'] ?? '');
@@ -35,7 +28,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
     
-    // Elimina corso
     if (isset($_POST['azione']) && $_POST['azione'] === 'elimina') {
         $id = intval($_POST['id'] ?? 0);
         if ($id > 0) {
@@ -48,7 +40,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
     
-    // Modifica corso
     if (isset($_POST['azione']) && $_POST['azione'] === 'modifica') {
         $id = intval($_POST['id'] ?? 0);
         $nome = trim($_POST['nome'] ?? '');
@@ -66,12 +57,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
     
-    // Redirect per evitare re-submit del form
     header('Location: ' . $_SERVER['PHP_SELF'] . ($messaggio ? '?msg=' . urlencode($messaggio) : '') . ($errore ? '?err=' . urlencode($errore) : ''));
     exit;
 }
 
-// Gestione modalità modifica
 if (isset($_GET['edit'])) {
     $edit_id = intval($_GET['edit']);
     $cdl = $db->getCdlById($edit_id);
@@ -80,7 +69,6 @@ if (isset($_GET['edit'])) {
     }
 }
 
-// Recupera messaggi dalla query string
 if (isset($_GET['msg'])) {
     $messaggio = htmlspecialchars($_GET['msg']);
 }
@@ -88,7 +76,6 @@ if (isset($_GET['err'])) {
     $errore = htmlspecialchars($_GET['err']);
 }
 
-// Recupera tutti i CDL dal database
 $corsiLaurea = $db->getAllCdl();
 ?>
 <!DOCTYPE html>
@@ -96,7 +83,7 @@ $corsiLaurea = $db->getAllCdl();
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
     <title>StudyBo - Gestione Corsi di Laurea</title>
 </head>
 

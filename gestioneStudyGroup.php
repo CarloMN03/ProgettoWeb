@@ -1,23 +1,16 @@
 <?php
-// gestioneStudyGroup.php - Sistema di gestione Study Groups
-
-// Includi il DatabaseHelper
 require_once 'db/DatabaseHelper.php';
 require_once 'db/config.php';
 
-// Inizializza la connessione al database
 $db = new DatabaseHelper(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_PORT);
 
-// Inizializza la sessione
 session_start();
 
-// Gestione delle operazioni
 $messaggio = '';
 $errore = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
-    // Elimina Study Group
     if (isset($_POST['azione']) && $_POST['azione'] === 'elimina') {
         $id = intval($_POST['id'] ?? 0);
         if ($id > 0) {
@@ -30,12 +23,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
     
-    // Redirect per evitare re-submit del form
     header('Location: ' . $_SERVER['PHP_SELF'] . ($messaggio ? '?msg=' . urlencode($messaggio) : '') . ($errore ? '?err=' . urlencode($errore) : ''));
     exit;
 }
 
-// Recupera messaggi dalla query string
 if (isset($_GET['msg'])) {
     $messaggio = htmlspecialchars($_GET['msg']);
 }
@@ -43,16 +34,13 @@ if (isset($_GET['err'])) {
     $errore = htmlspecialchars($_GET['err']);
 }
 
-// Recupera tutti gli study groups con dettagli completi
 $studyGroups = $db->getStudyGroupsWithDetails();
 
-// Funzione helper per formattare la data
 function formattaData($data) {
     $dataObj = DateTime::createFromFormat('Y-m-d', $data);
     return $dataObj ? $dataObj->format('d/m/Y') : $data;
 }
 
-// Mapping delle immagini per esame (puoi personalizzare)
 $immaginiEsami = [
     'Programmazione ad oggetti' => 'po.png',
     'Chimica' => 'chimica.png',
@@ -64,7 +52,7 @@ $immaginiEsami = [
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
     <title>StudyBo - Gestione Study Group</title>
 </head>
 
@@ -107,7 +95,6 @@ $immaginiEsami = [
                 <?php foreach ($studyGroups as $sg): ?>
                     <div class="card">
                         <?php 
-                        // Determina l'immagine da usare
                         $nomeEsame = $sg['NomeEsame'];
                         $immagine = $immaginiEsami[$nomeEsame] ?? 'default.png';
                         ?>

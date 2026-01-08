@@ -8,8 +8,6 @@ class DatabaseHelper {
             die("Connection failed: " . $this->db->connect_error);
         }        
     }
-
-    // ==================== CDL (Corsi di Laurea) ====================
     
     public function getAllCdl(){
         $stmt = $this->db->prepare("SELECT ID, Nome, Campus FROM cdl ORDER BY Nome");
@@ -48,8 +46,6 @@ class DatabaseHelper {
         return $stmt->execute();
     }
 
-    // ==================== ADMIN ====================
-    
     public function checkAdminLogin($username, $password){
         $query = "SELECT ID, Name, Username FROM admin WHERE Username = ? AND Password = ?";
         $stmt = $this->db->prepare($query);
@@ -66,9 +62,7 @@ class DatabaseHelper {
         $result = $stmt->get_result();
         return $result->fetch_all(MYSQLI_ASSOC);
     }
-
-    // ==================== USER ====================
-    
+  
     public function getUserById($id){
         $stmt = $this->db->prepare("SELECT ID, Nome, Cognome, Email, Username FROM user WHERE ID = ?");
         $stmt->bind_param('i', $id);
@@ -114,9 +108,7 @@ class DatabaseHelper {
         $stmt->bind_param('i', $id);
         return $stmt->execute();
     }
-
-    // ==================== ESAME ====================
-    
+  
     public function getAllEsami(){
         $stmt = $this->db->prepare("SELECT ID, Nome, Professore, Anno, cdl FROM esame ORDER BY Nome");
         $stmt->execute();
@@ -151,7 +143,7 @@ class DatabaseHelper {
     public function updateEsame($id, $nome, $professore, $anno, $idCdl){
         $query = "UPDATE esame SET Nome = ?, Professore = ?, Anno = ?, cdl = ? WHERE ID = ?";
         $stmt = $this->db->prepare($query);
-        $stmt->bind_param('ssii', $nome, $professore, $anno, $idCdl, $id);
+        $stmt->bind_param('sssii', $nome, $professore, $anno, $idCdl, $id);
         return $stmt->execute();
     }
 
@@ -162,8 +154,6 @@ class DatabaseHelper {
         return $stmt->execute();
     }
 
-    // ==================== LINGUA ====================
-    
     public function getAllLingue(){
         $stmt = $this->db->prepare("SELECT ID, Nome FROM lingua ORDER BY Nome");
         $stmt->execute();
@@ -179,8 +169,6 @@ class DatabaseHelper {
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
-    // ==================== STUDYGROUP ====================
-    
     public function getAllStudyGroups(){
         $query = "SELECT ID, Tema, Luogo, Data, Ora, Esame, Lingua, Partecipanti FROM studygroup ORDER BY Data DESC, Ora DESC";
         $stmt = $this->db->prepare($query);
@@ -326,8 +314,6 @@ class DatabaseHelper {
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
-    // ==================== FUNZIONI AVANZATE ====================
-    
     // Ottiene tutti i gruppi di studio con informazioni complete (JOIN)
     public function getStudyGroupsWithDetails(){
         $query = "SELECT 

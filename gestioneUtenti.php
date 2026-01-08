@@ -1,23 +1,16 @@
-<?php
-// gestioneUtenti.php - Sistema di gestione utenti
-
-// Includi il DatabaseHelper
+<?php 
 require_once 'db/DatabaseHelper.php';
 require_once 'db/config.php';
 
-// Inizializza la connessione al database
 $db = new DatabaseHelper(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_PORT);
 
-// Inizializza la sessione
 session_start();
 
-// Gestione delle operazioni
 $messaggio = '';
 $errore = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
-    // Elimina utente
     if (isset($_POST['azione']) && $_POST['azione'] === 'elimina') {
         $id = intval($_POST['id'] ?? 0);
         if ($id > 0) {
@@ -30,7 +23,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
     
-    // Blocca utente
     if (isset($_POST['azione']) && $_POST['azione'] === 'blocca') {
         $id = intval($_POST['id'] ?? 0);
         if ($id > 0) {
@@ -43,7 +35,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
     
-    // Sblocca utente
     if (isset($_POST['azione']) && $_POST['azione'] === 'sblocca') {
         $id = intval($_POST['id'] ?? 0);
         if ($id > 0) {
@@ -56,7 +47,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
     
-    // Rendi amministratore
     if (isset($_POST['azione']) && $_POST['azione'] === 'rendi_admin') {
         $id = intval($_POST['id'] ?? 0);
         if ($id > 0) {
@@ -69,7 +59,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
     
-    // Rimuovi amministratore
     if (isset($_POST['azione']) && $_POST['azione'] === 'rimuovi_admin') {
         $id = intval($_POST['id'] ?? 0);
         if ($id > 0) {
@@ -82,12 +71,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
     
-    // Redirect per evitare re-submit del form
     header('Location: ' . $_SERVER['PHP_SELF'] . ($messaggio ? '?msg=' . urlencode($messaggio) : '') . ($errore ? '?err=' . urlencode($errore) : ''));
     exit;
 }
 
-// Recupera messaggi dalla query string
 if (isset($_GET['msg'])) {
     $messaggio = htmlspecialchars($_GET['msg']);
 }
@@ -95,7 +82,6 @@ if (isset($_GET['err'])) {
     $errore = htmlspecialchars($_GET['err']);
 }
 
-// Recupera gli utenti dal database divisi per categoria
 $utentiNormali = $db->getNormalUsers();
 $utentiBloccati = $db->getBlockedUsers();
 $amministratori = $db->getAdminUsers();
@@ -105,7 +91,7 @@ $amministratori = $db->getAdminUsers();
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
     <title>StudyBo - Gestione Utenti</title>
 </head>
 
