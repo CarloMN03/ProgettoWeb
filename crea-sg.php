@@ -13,6 +13,18 @@ if(isset($_SESSION["username"]) && isset($_GET["idcdl"]) && isset($_GET["idesame
     if(isset($_GET["idcdl"]) && isset($_GET["idesame"]) && isset($_POST["lingua"]) && isset($_POST["tema"]) && isset($_POST["luogo"]) && isset($_POST["dettaglioluogo"])&& isset($_POST["data"]) && isset($_POST["ora"]) && isset($_SESSION["username"])){
         $templateParams["ritorno-creasg"] = $dbh->setSg($_GET["idcdl"], $_GET["idesame"], $templateParams["idultimosg"], $_POST["lingua"], $_POST["tema"], $_POST["luogo"], $_POST["dettaglioluogo"], $_POST["data"], $_POST["ora"]);
         $templateParams["ritorno-adesione"] = $dbh->setAdesione($_GET["idcdl"], $_GET["idesame"], $templateParams["idultimosg"], $_SESSION["username"]);
+        $templateParams["preferenze"] = $dbh->getPreferenze($_GET["idcdl"], $_GET["idesame"], $_POST["luogo"], $_POST["ora"], $_POST["lingua"]);
+        if(!empty($templateParams["preferenze"])){
+            $templateParams["idultimanot"] = $dbh->getLastIdNotificaPreferenza($_GET["idcdl"], $_GET["idesame"], $templateParams["idultimosg"])[0]["idultnot"] + 1;
+                if(empty($templateParams["idultimanot"])){
+            $templateParams["idultimanot"] = 1;
+            }
+            $templateParams["notifica-pref"] = $dbh->setNotificaPreferenza($_GET["idcdl"], $_GET["idesame"], $templateParams["idultimosg"], $templateParams["idultimanot"], $_SESSION["username"]);
+            foreach($templateParams["preferenze"] as $userpref){
+                $templateParams["invio-not"][$userpref["username"]] = $dbh->sendNotificaPreferenza($_GET["idcdl"], $_GET["idesame"], $templateParams["idultimosg"], $templateParams["idultimanot"], $userpref["username"]);
+            }
+        
+        }
     }
     
 } else {

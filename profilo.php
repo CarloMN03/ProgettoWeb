@@ -8,12 +8,7 @@ if(isset($_GET["logout"])){
     session_unset();
     $templateParams["nome"] = "profilo-ko.php";
 } else if(isset($_SESSION["username"])){
-    $templateParams["nome"] = "profilo.php";
-    $templateParams["nomeuser"] = $dbh->getNameUser($_SESSION["username"])[0]["nome"];
-    $templateParams["cognomeuser"] = $dbh->getNameUser($_SESSION["username"])[0]["cognome"];
-    $templateParams["cdl"] = $dbh->getCdl();
-    $templateParams["studygroupiscritto"] = $dbh->getStGrUtente($_SESSION["username"]);
-
+    
     if(isset($_SESSION["username"]) && isset($_POST["oldPwd"])){
         $login_result = $dbh->checkPwd($_SESSION["username"], $_POST["oldPwd"]);
         if(count($login_result)==0){
@@ -62,6 +57,21 @@ if(isset($_GET["logout"])){
             $msg = $dbh->updateAnag2($_SESSION["username"], $_POST["nome"], $_POST["cognome"]);
         }
     }
+
+    if(isset($_POST["elimina-pref"])){
+        $templateParams["ritorno-elimina-preferenza"] = $dbh->deletePreferenza($_POST["idcdl"], $_POST["idesame"], $_POST["idpreferenza"], $_SESSION["username"]);
+    }
+
+    if(isset($_POST["mod-pref"])){
+        $templateParams["ritorno-modifica-preferenza"] = $dbh->updatePreferenza($_POST["idcdl"], $_POST["idesame"], $_POST["idpreferenza"], $_SESSION["username"], $_POST["luogo"], $_POST["ora-da"], $_POST["ora-a"], $_POST["idlingua"]);
+    }
+
+    $templateParams["nome"] = "profilo.php";
+    $templateParams["nomeuser"] = $dbh->getNameUser($_SESSION["username"])[0]["nome"];
+    $templateParams["cognomeuser"] = $dbh->getNameUser($_SESSION["username"])[0]["cognome"];
+    $templateParams["cdl"] = $dbh->getCdl();
+    $templateParams["studygroupiscritto"] = $dbh->getStGrUtente($_SESSION["username"]);
+    $templateParams["preferenza"] = $dbh->getPreferenzaUser($_SESSION["username"]);
 
 } else {
     $templateParams["nome"] = "profilo-ko.php";

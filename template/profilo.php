@@ -89,6 +89,47 @@
                 <input type="button" id="closedel" value="ʌ" onclick="closeForm('closedel', 'delacc', 'opendel')">
                 <input type="button" id="opendel" value="v" onclick="openForm('closedel', 'delacc', 'opendel')">
             </div>
+            <div class="gestione-preferenze">
+                <h4>Gestisci le preferenze</h4>
+                <div class="elenco-preferenze" id="elenco-preferenze">
+                    <h3>Elenco preferenze inserite</h3>
+                    <?php if(isset($templateParams["ritorno-elimina-preferenza"])): ?>
+                        <p><?php echo $templateParams["ritorno-elimina-preferenza"]; ?></p>
+                    <?php endif; ?>
+                    <?php if(isset($templateParams["ritorno-modifica-preferenza"])): ?>
+                        <p><?php echo $templateParams["ritorno-modifica-preferenza"]; ?></p>
+                    <?php endif; ?>
+                    <div class="elenco-prefcard">
+                        <?php foreach($templateParams["preferenza"] as $preferenza): ?>
+                            <div class="prefcard">
+                                <div class="prefimg">
+                                    <img src="<?php echo UPLOAD_DIR . $preferenza["imgesame"]; ?>" alt=""/>
+                                </div><div class="prefdesc">
+                                    <h4><?php echo $preferenza["nomecdl"]; ?></h4>
+                                    <h4><?php echo $preferenza["nomeesame"]; ?></h4>
+                                    <ul>
+                                        <li>Luogo: <?php echo $preferenza["luogo"]; ?></li>
+                                        <li>Da ora: <?php echo $preferenza["daora"]; ?></li>
+                                        <li>A ora: <?php echo $preferenza["aora"]; ?></li>
+                                        <li>Lingua: <?php echo $preferenza["descrizionelingua"]; ?></li>
+                                        <li><button onclick='addFormModifica(<?php echo $preferenza["idcdl"]; ?>, <?php echo $preferenza["idesame"]; ?>, <?php echo $preferenza["idpreferenza"]; ?>, "<?php echo $preferenza["daora"]; ?>", "<?php echo $preferenza["aora"]; ?>")'>Modifica</button></li>
+                                        <li><form action="" method="POST">
+                                            <input type="hidden" name="idcdl" id="idcdl" value="<?php echo $preferenza["idcdl"]; ?>"/>
+                                            <input type="hidden" name="idesame" id="idesame" value="<?php echo $preferenza["idesame"]; ?>"/>
+                                            <input type="hidden" name="idpreferenza" id="idpreferenza" value="<?php echo $preferenza["idpreferenza"]; ?>"/>
+                                            <input type="submit" name="elimina-pref" value="Elimina"/></form></li>
+                                    </ul>  
+                                </div>
+                                <div class="form-mod-pref">
+
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>   
+                </div>
+                <input type="button" id="closepref" value="ʌ" onclick="closeForm('closepref', 'elenco-preferenze', 'openpref')">
+                <input type="button" id="openpref" value="v" onclick="openForm('closepref', 'elenco-preferenze', 'openpref')">
+            </div>
         </section>
         <section class="iscr-sg">
             <h3>Study Group ai quali sei iscritto</h3>

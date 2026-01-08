@@ -6,11 +6,11 @@
     <link rel="stylesheet" href="./css/style.css"/>
     <title><?php echo $templateParams["titolo"]; ?></title>
 </head>
-<body> 
+<body onload="checkNotifica()"> 
     <header>
         <div>
             <img src="./upload/logo.libro.png.PNG" alt="logo studybo libro"/><h1>StudyBo</h1>
-        </div><button class="lang-switch" type="button">IT</button><img src="./upload/hamburger icon.png" alt="apri hamburger menu" id="hamburger" onclick="openMenu('x', 'nav-principale', 'hamburger', <?php echo $templateParams['amministratore']; ?>, '<?php echo $templateParams['nomeutente']; ?>')"/><img src="./upload/x icon.png" alt="chiudi hamburger menu" id="x" onclick="closeForm('x', 'nav-principale', 'hamburger')"/>
+        </div><div class="ico-notifica"></div><button class="lang-switch" type="button">IT</button><img src="./upload/hamburger icon.png" alt="apri hamburger menu" id="hamburger" onclick="openMenu('x', 'nav-principale', 'hamburger', <?php echo $templateParams['amministratore']; ?>, '<?php echo $templateParams['nomeutente']; ?>')"/><img src="./upload/x icon.png" alt="chiudi hamburger menu" id="x" onclick="closeForm('x', 'nav-principale', 'hamburger')"/>
     </header>
     <nav id="nav-principale">
     </nav>
@@ -46,6 +46,15 @@
             </ul>
     </aside>
     <script src="./js/script.js"></script>
+    <?php
+    if(isset($templateParams["js"])):
+        foreach($templateParams["js"] as $script):
+    ?>
+        <script src="<?php echo $script; ?>"></script>
+    <?php
+        endforeach;
+    endif;
+    ?>
     <footer>
       <h4>Imapara meglio, insieme</h4>
       <p>Tutti diritti riservati, 2025</p>

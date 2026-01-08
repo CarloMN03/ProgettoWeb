@@ -2,6 +2,9 @@
     <h2>Study Group per l'esame di <?php echo $templateParams["esame"][0]["nomeesame"]; ?></h2>
     <form action="#" method="POST" id="newsg">
         <h3>Crea un nuovo Study Group</h3>
+        <?php if(isset($templateParams["notifica-pref"])): ?>
+            <p><?php echo $templateParams["notifica-pref"]; ?></p>
+        <?php endif; ?>
         <?php if(isset($templateParams["ritorno-creasg"])): ?>
             <p><?php echo $templateParams["ritorno-creasg"]; ?></p>
         <?php endif; ?>

@@ -258,8 +258,8 @@
             return $result->fetch_all(MYSQLI_ASSOC);
         }
 
-        public function updateSg($cdl, $esame, $sg, $tema, $luogo, $data, $ora, $lingua) {
-            $query = "UPDATE studygroup SET tema = '$tema', luogo = '$luogo', `data` = '$data', ora = '$ora', idlingua = '$lingua' WHERE idcdl = '$cdl' AND idesame = '$esame' AND idstudygroup = '$sg'";
+        public function updateSg($cdl, $esame, $sg, $tema, $luogo, $dettaglioluogo, $data, $ora, $lingua) {
+            $query = "UPDATE studygroup SET tema = '$tema', luogo = '$luogo', dettaglioluogo = '$dettaglioluogo', `data` = '$data', ora = '$ora', idlingua = '$lingua' WHERE idcdl = '$cdl' AND idesame = '$esame' AND idstudygroup = '$sg'";
             if ($this->db->query($query) === TRUE) {
                 return "Aggiornamento Study Group effettuato con successo";
             } else {
@@ -371,6 +371,224 @@
             $result = $stmt->get_result();
 
             return $result->fetch_all(MYSQLI_ASSOC);
+        }
+
+        public function getLastIdNotifica($cdl, $esame, $sg, $risorsa){
+            $query = "SELECT MAX(idnotrisorsa) lastnotifica FROM notificarisorsa WHERE idcdl = ? AND idesame = ? AND idstudygroup = ? AND idrisorsa = ?";
+            $stmt = $this->db->prepare($query);
+            $stmt->bind_param('iiii', $cdl, $esame, $sg, $risorsa);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            return $result->fetch_all(MYSQLI_ASSOC);
+        }
+
+        public function notificaRis($cdl, $esame, $sg, $idrisorsa, $notifica){
+            $query = "INSERT INTO notificarisorsa (idcdl, idesame, idstudygroup, idrisorsa, idnotrisorsa, autorizzata, lavorata, risposta) VALUES ($cdl, $esame, $sg, $idrisorsa, $notifica, 0, 0, 0)";
+            return $this->db->query($query);
+        }
+
+        public function sendNotificaToAdmin($cdl, $esame, $sg, $idrisorsa, $notifica, $admin){
+            $query = "INSERT INTO destnotificarisorsa (idcdl, idesame, idstudygroup, idrisorsa, idnotifica, username, letta, commento) VALUES ($cdl, $esame, $sg, $idrisorsa, $notifica, '$admin', 0, '')";
+            return $this->db->query($query);
+        }
+
+        public function getNotificaRisToUser($user, $lavorata, $risposta){
+            $query = "SELECT D.*, N.autorizzata, N.lavorata, N.commento, R.filerisorsa, R.nomeris, R.username mittente FROM destnotificarisorsa D, notificarisorsa N, risorsa R WHERE D.idcdl = N.idcdl AND D.idesame = N.idesame AND D.idstudygroup = N.idstudygroup AND D.idrisorsa = N.idrisorsa AND D.idnotifica = N.idnotrisorsa AND D.idcdl = R.idcdl AND D.idesame = R.idesame AND D.idstudygroup = R.idstudygroup AND D.idrisorsa = R.idrisorsa AND D.username = ? AND N.lavorata = ? AND N.risposta = ? AND D.letta = 0";
+            $stmt = $this->db->prepare($query);
+            $stmt->bind_param('sii', $user, $lavorata, $risposta);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            return $result->fetch_all(MYSQLI_ASSOC);
+        }
+
+        public function updateNotificaRis($autorizza, $cdl, $esame, $sg, $risorsa, $notifica, $note){
+        $query = "UPDATE `notificarisorsa` SET autorizzata = $autorizza, lavorata = 1, risposta = 1, commento = '$note' WHERE idcdl = $cdl AND idesame = $esame AND idstudygroup = $sg AND idrisorsa = $risorsa AND idnotrisorsa = $notifica";
+        if ($this->db->query($query) === TRUE) {
+                return "Aggiornamento notifica effettuato con successo";
+            } else {
+                return "Aggiornamento notifica fallito: " . $this->db->error;
+            };
+        }
+
+        public function updateDestNotificaRis($cdl, $esame, $sg, $risorsa, $notifica, $user){
+        $query = "UPDATE `destnotificarisorsa` SET letta = 1 WHERE idcdl = $cdl AND idesame = $esame AND idstudygroup = $sg AND idrisorsa = $risorsa AND idnotifica = $notifica AND username = '$user'";
+        if ($this->db->query($query) === TRUE) {
+                return "Aggiornamento destinatario notifica effettuato con successo";
+            } else {
+                return "Aggiornamento destinatario notifica fallito: " . $this->db->error;
+            };
+        }
+
+        public function rispostaNotificaRis($cdl, $esame, $sg, $idrisorsa, $notifica, $mittente){
+        $query = "INSERT INTO destnotificarisorsa (idcdl, idesame, idstudygroup, idrisorsa, idnotifica, username, letta, commento) VALUES ($cdl, $esame, $sg, $idrisorsa, $notifica, '$mittente', 0, '')";
+        if ($this->db->query($query) === TRUE) {
+                return "Risposta al mittente inserita con successo";
+            } else {
+                return "Inserimento risposta al mittente fallito: " . $this->db->error;
+            };
+        }
+
+        public function updateRisorsa($cdl, $esame, $sg, $risorsa){
+        $query = "UPDATE `risorsa` SET notifica = 0 WHERE idcdl = $cdl AND idesame = $esame AND idstudygroup = $sg AND idrisorsa = $risorsa";
+        if ($this->db->query($query) === TRUE) {
+                return "Aggiornamento risorsa effettuato con successo";
+            } else {
+                return "Aggiornamento risorsa fallito: " . $this->db->error;
+            };
+        }
+
+        public function getLastIdNotificaSg($cdl, $esame, $sg){
+            $query = "SELECT MAX(idnotifica) lastnotifica FROM notificavarsg WHERE idcdl = ? AND idesame = ? AND idstudygroup = ?";
+            $stmt = $this->db->prepare($query);
+            $stmt->bind_param('iii', $cdl, $esame, $sg);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            return $result->fetch_all(MYSQLI_ASSOC);
+        }
+
+        public function setNotificaVariazione($cdl, $esame, $sg, $notifica, $user){
+        $query = "INSERT INTO notificavarsg (idcdl, idesame, idstudygroup, idnotifica, username) VALUES ($cdl, $esame, $sg, $notifica, '$user')";
+        return $this->db->query($query);
+        }
+
+        public function sendNotificaToPart($cdl, $esame, $sg, $notifica, $user){
+        $query = "INSERT INTO destnotificavarsg (idcdl, idesame, idstudygroup, idnotifica, username, letta) VALUES ($cdl, $esame, $sg, $notifica, '$user', 0)";
+        if ($this->db->query($query) === TRUE) {
+                return "Invio notifica con successo";
+            } else {
+                return "Invio notifica fallito: " . $this->db->error;
+            };
+        }
+
+        public function getNotificaVarSgToUser($user){
+            $query = "SELECT D.*, N.username mittente, S.idlingua, S.tema, S.luogo, S.dettaglioluogo, S.data, S.ora, C.nomecdl, E.nomeesame FROM destnotificavarsg D, notificavarsg N, studygroup S, cdl C, esame E WHERE D.idcdl = N.idcdl AND D.idesame = N.idesame AND D.idstudygroup = N.idstudygroup AND D.idnotifica = N.idnotifica AND D.idcdl = S.idcdl AND D.idesame = S.idesame AND D.idstudygroup = S.idstudygroup AND D.idcdl = C.idcdl AND D.idcdl = E.idcdl AND D.idesame = E.idesame AND D.username = ? AND D.letta = 0";
+            $stmt = $this->db->prepare($query);
+            $stmt->bind_param('s', $user);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            return $result->fetch_all(MYSQLI_ASSOC);
+        }
+
+        public function updateDestNotificaVarSg($cdl, $esame, $sg, $notifica, $user){
+        $query = "UPDATE `destnotificavarsg` SET letta = 1 WHERE idcdl = $cdl AND idesame = $esame AND idstudygroup = $sg AND idnotifica = $notifica AND username = '$user'";
+        if ($this->db->query($query) === TRUE) {
+                return "Aggiornamento destinatario notifica effettuato con successo";
+            } else {
+                return "Aggiornamento destinatario notifica fallito: " . $this->db->error;
+            };
+        }
+
+        public function getLastIdPreferenza($cdl, $esame, $user){
+            $query = "SELECT MAX(idpreferenza) lastpref FROM preferenza WHERE idcdl = ? AND idesame = ? AND username = ?";
+            $stmt = $this->db->prepare($query);
+            $stmt->bind_param('iis', $cdl, $esame, $user);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            return $result->fetch_all(MYSQLI_ASSOC);
+        }
+
+        public function addPreferenza($user, $cdl, $esame, $pref, $luogo, $daora, $aora, $lingua){
+        $query = "INSERT INTO `preferenza` (idcdl, idesame, username, idpreferenza, luogo, daora, aora, idlingua) VALUES ($cdl, $esame, '$user', $pref, '$luogo', '$daora', '$aora', '$lingua')";
+        if ($this->db->query($query) === TRUE) {
+                return "Preferenza aggiunta con successo";
+            } else {
+                return "Inserimento preferenza fallito: " . $this->db->error;
+            };
+        }
+
+        public function getPreferenze($cdl, $esame, $luogo, $ora, $lingua){
+            $query = "SELECT DISTINCT username FROM preferenza WHERE idcdl = ? AND idesame = ? AND luogo = ? AND daora <= ? AND aora >= ? AND idlingua = ?";
+            $stmt = $this->db->prepare($query);
+            $stmt->bind_param('iissss', $cdl, $esame, $luogo, $ora, $ora, $lingua);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            return $result->fetch_all(MYSQLI_ASSOC);
+        }
+
+        public function getLastIdNotificaPreferenza($cdl, $esame, $sg){
+            $query = "SELECT MAX(idnotifica) idultnot FROM notificapreferenza WHERE idcdl = ? AND idesame = ? AND idstudygroup = ?";
+            $stmt = $this->db->prepare($query);
+            $stmt->bind_param('iii', $cdl, $esame, $sg);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            return $result->fetch_all(MYSQLI_ASSOC);
+        }
+
+        public function setNotificaPreferenza($cdl, $esame, $sg, $notifica, $user){
+        $query = "INSERT INTO notificapreferenza (idcdl, idesame, idstudygroup, idnotifica, username) VALUES ($cdl, $esame, $sg, $notifica, '$user')";
+        return $this->db->query($query);
+        }
+
+        public function sendNotificaPreferenza($cdl, $esame, $sg, $notifica, $user){
+        $query = "INSERT INTO destnotificapreferenza (idcdl, idesame, idstudygroup, idnotifica, username, letta) VALUES ($cdl, $esame, $sg, $notifica, '$user', 0)";
+        if ($this->db->query($query) === TRUE) {
+                return "Invio notifica con successo";
+            } else {
+                return "Invio notifica fallito: " . $this->db->error;
+            };
+        }
+
+        public function getNotificaPrefToUser($user){
+            $query = "SELECT D.*, N.username mittente, S.idlingua, S.tema, S.luogo, S.dettaglioluogo, S.data, S.ora, E.nomeesame, C.nomecdl FROM destnotificapreferenza D, notificapreferenza N, studygroup S, esame E, cdl C WHERE D.idcdl = N.idcdl AND D.idesame = N.idesame AND D.idstudygroup = N.idstudygroup AND D.idnotifica = N.idnotifica AND D.idcdl = S.idcdl AND D.idesame = S.idesame AND D.idstudygroup = S.idstudygroup AND D.idcdl = E.idcdl AND D.idesame = E.idesame AND D.idcdl = C.idcdl AND D.username = ? AND D.letta = 0";
+            $stmt = $this->db->prepare($query);
+            $stmt->bind_param('s', $user);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            return $result->fetch_all(MYSQLI_ASSOC);
+        }
+
+        public function updateDestNotificaPref($cdl, $esame, $sg, $notifica, $user){
+        $query = "UPDATE `destnotificapreferenza` SET letta = 1 WHERE idcdl = $cdl AND idesame = $esame AND idstudygroup = $sg AND idnotifica = $notifica AND username = '$user'";
+        if ($this->db->query($query) === TRUE) {
+                return "Aggiornamento destinatario notifica effettuato con successo";
+            } else {
+                return "Aggiornamento destinatario notifica fallito: " . $this->db->error;
+            };
+        }
+
+        public function getPreferenzaUser($user){
+            $query = "SELECT P.*, E.nomeesame, E.imgesame, L.descrizionelingua, C.nomecdl FROM preferenza P, esame E, lingua L, cdl C WHERE P.idcdl = E.idcdl AND P.idesame = E.idesame AND P.idlingua = L.idlingua AND P.idcdl = C.idcdl AND P.username = ?";
+            $stmt = $this->db->prepare($query);
+            $stmt->bind_param('s', $user);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            return $result->fetch_all(MYSQLI_ASSOC);
+        }
+
+        public function deletePreferenza($cdl, $esame, $preferenza, $user){
+        $query = "DELETE FROM `preferenza` WHERE idcdl = $cdl AND idesame = $esame AND idpreferenza = $preferenza AND username = '$user'";
+        if ($this->db->query($query) === TRUE) {
+                return "Preferenza eliminata con successo";
+            } else {
+                return "Rimozione preferenza fallita: " . $this->db->error;
+            };
+        }
+
+        public function updatePreferenza($cdl, $esame, $preferenza, $user, $luogo, $daora, $aora, $lingua){
+        $query = "UPDATE `preferenza` SET luogo = '$luogo', daora = '$daora', aora = '$aora', idlingua = '$lingua' WHERE idcdl = $cdl AND idesame = $esame AND idpreferenza = $preferenza AND username = '$user'";
+        if ($this->db->query($query) === TRUE) {
+                return "Aggiornamento preferenza effettuato con successo";
+            } else {
+                return "Aggiornamento preferenza fallito: " . $this->db->error;
+            };
+        }
+
+        public function removeRisorsa($cdl, $esame, $sg, $risorsa){
+        $query = "DELETE FROM `risorsa` WHERE idcdl = $cdl AND idesame = $esame AND idstudygroup = $sg AND idrisorsa = $risorsa";
+        if ($this->db->query($query) === TRUE) {
+                return "Risorsa rimossa con successo";
+            } else {
+                return "Rimozione risorsa fallita: " . $this->db->error;
+            };
         }
     }
 ?>

@@ -97,3 +97,86 @@ function addDesc(idform){
     const selector = selector1.concat(" ", selector2);
     document.querySelector(selector).innerHTML=descLuogo;
 }
+
+function addPreferenza(){
+    const menu = `
+                        <form action="" method="POST">
+                            <ul>
+                                <li>
+                                    <label for="luogo">Luogo: </label><select name="luogo" id="luogo"><option value="Online">Online</option><option value="Fisico">In Fisico</option></select>
+                                </li>
+                                <li>
+                                    <label for="ora-da">Da ora: </label><input type="time" name="ora-da" id="ora-da" value="00:00"/>
+                                </li>
+                                <li>
+                                    <label for="ora-a">Da ora: </label><input type="time" name="ora-a" id="ora-a" value="23:59"/>
+                                </li>
+                                <li>
+                                    <label for="idlingua">Lingua: </label><select name="idlingua" id="idlingua"><option value="IT">Italiano</option><option value="EN">English</option></select>
+                                </li>
+                                <li>
+                                    <input type="submit" name="submit" value="Invia Preferenza"/>
+                                </li>
+                            </ul>
+                        </form>
+    `;
+
+    document.querySelector(".form-pref").innerHTML = menu;
+    document.querySelector("#card-text ul").style.display = "none";
+}
+
+async function checkNotifica(){
+    const url = "api-notifica.php";
+    
+    try{
+        const response = await fetch(url);
+        if(!response.ok){
+            throw new Error("Response status: " + response.status);
+        }
+        const json = await response.json();
+        if(json == 1){
+            const addNotifica = `<a href="notifica.php"><img src="./upload/notifica.png" alt="notifica"></a>`;
+            document.querySelector(".ico-notifica").innerHTML = addNotifica;
+        }
+    }
+    catch(error){
+        console.log(error.message);
+    }
+}
+
+checkNotifica();
+
+setInterval(checkNotifica, 5000);
+
+function addFormModifica(cdl, esame, pref, daora, aora){
+    const formPref = `
+                        <form action="" method="POST">
+                            <ul>
+                                <li>
+                                    <label for="luogo">Luogo: </label><select name="luogo" id="luogo"><option value="Online">Online</option><option value="Fisico">In Fisico</option></select>
+                                </li>
+                                <li>
+                                    <label for="ora-da">Da ora: </label><input type="time" name="ora-da" id="ora-da" value="${daora}"/>
+                                </li>
+                                <li>
+                                    <label for="ora-a">Da ora: </label><input type="time" name="ora-a" id="ora-a" value="${aora}"/>
+                                </li>
+                                <li>
+                                    <label for="idlingua">Lingua: </label><select name="idlingua" id="idlingua"><option value="IT">Italiano</option><option value="EN">English</option></select>
+                                </li>
+                                <li>
+                                    <input type="hidden" name="idcdl" id="idcdl" value="${cdl}"/>
+                                    <input type="hidden" name="idesame" id="idesame" value="${esame}"/>
+                                    <input type="hidden" name="idpreferenza" id="idpreferenza" value="${pref}"/>
+                                </li>
+                                <li>
+                                    <input type="submit" name="mod-pref" value="Invia Modifica"/>
+                                </li>
+                            </ul>
+                        </form>
+    `;
+
+    document.querySelector(".form-mod-pref").style.display = "initial";
+    document.querySelector(".form-mod-pref").innerHTML = formPref;
+    document.querySelector(".prefdesc").style.display = "none";
+}

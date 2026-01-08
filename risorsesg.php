@@ -29,12 +29,25 @@ if(empty($templateParams["partecipanti"])){
                 $risorsa = $msg;
                 $id = $dbh->insertResource($_GET["idcdl"], $_GET["idesame"], $_GET["idstudygroup"], $_POST["private"], $_POST["nomeris"], $_SESSION["username"], $risorsa, $templateParams["maxidrisorsa"]);
                 if($id!=false){
+                    $templateParams["idnotifica"] = $dbh->getLastIdNotifica($_GET["idcdl"], $_GET["idesame"], $_GET["idstudygroup"], $templateParams["maxidrisorsa"])[0]["lastnotifica"] + 1;
+                    if(empty($templateParams["idnotifica"])){
+                        $templateParams["idnotifica"] = 1;
+                    }
+                    $notifica = $dbh->notificaRis($_GET["idcdl"], $_GET["idesame"], $_GET["idstudygroup"], $templateParams["maxidrisorsa"], $templateParams["idnotifica"]);
+                    $templateParams["amministratori"] = $dbh->getAdmin();
+                    foreach($templateParams["amministratori"] as $amministratore){
+                        $adminnotifica = $dbh->sendNotificaToAdmin($_GET["idcdl"], $_GET["idesame"], $_GET["idstudygroup"], $templateParams["maxidrisorsa"], $templateParams["idnotifica"], $amministratore["username"]);
+                    }
+                    
                     $msg = "Inserimento completato correttamente! Attendi l'autorizzazione dell'Amministratore prima di vederlo caricato nelle risorse dello Study Group.";
                 } else {
                     $msg = "Errore in inserimento!";
                 }
             }
         }
+    }
+    if(isset($_POST["rimuovi-ris"])){
+        $templateParams["ritorno-rimuovi-ris"] = $dbh->removeRisorsa($_GET["idcdl"], $_GET["idesame"], $_GET["idstudygroup"], $_POST["idrisorsa"]);
     }
     $templateParams["risorsa"] = $dbh->getResourceSg($_GET["idcdl"], $_GET["idesame"], $_GET["idstudygroup"]);
     if(empty($templateParams["risorsa"])){

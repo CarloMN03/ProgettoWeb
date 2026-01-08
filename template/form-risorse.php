@@ -36,12 +36,19 @@
                 <?php endif; ?>
                 <table <?php echo $tabella; ?>>  
                     <tr>
-                        <th id="nomeris">Nome risorsa</th><th id="usercarica">Inserita da</th>
+                        <th id="nomeris">Nome risorsa</th><th id="usercarica">Inserita da</th><th id="azioni">Azioni</th>
                     </tr>
                         <?php foreach($templateParams["risorsa"] as $risorsa) : ?>
                             <?php if($risorsa["notifica"] == 0): ?>
                                 <tr>
-                                    <td header="nomeris"><a href="<?php echo UPLOAD_DIR . $risorsa["filerisorsa"]; ?>"><?php echo $risorsa["nomeris"]; ?></a></td><td headers="usercarica"><?php echo $risorsa["username"]; ?></td>
+                                    <td header="nomeris"><a href="<?php echo UPLOAD_DIR . $risorsa["filerisorsa"]; ?>"><?php echo $risorsa["nomeris"]; ?></a></td><td headers="usercarica"><?php echo $risorsa["username"]; ?></td><td>
+                                        <?php if($risorsa["username"] == $_SESSION["username"]): ?>
+                                            <form action="" method="POST">
+                                                <input type="hidden" name="idrisorsa" value="<?php echo $risorsa["idrisorsa"]; ?>"/>
+                                                <input type="submit" name="rimuovi-ris" value="Rimuovi"/>
+                                            </form>
+                                        <?php endif; ?>
+                                    </td>
                                 </tr>
                             <?php endif; ?>
                         <?php endforeach; ?>

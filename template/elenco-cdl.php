@@ -27,10 +27,10 @@
                                 <?php if($esame["idcdl"] == $cdl["idcdl"] && $esame["annoesame"] == $i): ?>
                                     <a href="esame.php?idcdl=<?php echo $cdl["idcdl"]; ?>&idesame=<?php echo $esame["idesame"]; ?>"><div class="card-esami">
                                         <div class="esami-img">
-                                            <img src="<?php echo UPLOAD_DIR . $esame["imgesame"]; ?>" alt=""/>
-                                        </div>
+                                            <img src="<?php echo UPLOAD_DIR . $esame["imgesame"]; ?>" alt=""/>   
+                                        </div>                             
                                         <h4><?php echo $esame["nomeesame"]; ?></h4>
-                                    </div></a>
+                                    </div></a> 
                                 <?php endif; ?>
                             <?php endforeach; ?>
                             </div>

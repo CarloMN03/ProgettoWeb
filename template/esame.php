@@ -7,9 +7,14 @@
                     <ul>
                         <li>Campus: <?php echo $templateParams["cdlesame"][0]["sede"]; ?></li>
                         <li>Study Group attivi: <?php echo $templateParams["stgresame"][0]["numsg"]; ?></li>
+                        <?php if(isset($_SESSION["username"])): ?>
+                            <li><button onclick="addPreferenza()">Aggiungi ai Preferiti</button></li>
+                        <?php endif; ?>
                     </ul>
-                </div>
-            </div>
+                    <div class="form-pref">    
+                    </div>
+                </div>    
+            </div>   
             <div id="study-gr-corso">
                 <h3>Elenco Study Group attivi sul corso</h3>
                 <?php foreach($templateParams["studygrattivi"] as $studygr): ?>
@@ -51,4 +56,3 @@
                 </a>
             </div>
         </section>
-        <script src="script.js"></script>

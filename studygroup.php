@@ -1,24 +1,28 @@
 <?php
 require_once 'bootstrap.php';
 
-if(isset($_POST["tema"]) && isset($_POST["luogo"]) && isset($_POST["data"]) && isset($_POST["ora"]) && isset($_POST["lingua"])){
-    $templateParams["ritorno-variazionesg"] = $dbh->updateSg($_GET["idcdl"], $_GET["idesame"], $_GET["idstudygroup"], $_POST["tema"], $_POST["luogo"], $_POST["data"], $_POST["ora"], $_POST["lingua"]);
-}
-
-if(isset($_POST["iscrivi"])){
-    $templateParams["ritorno-iscrivi"] = $dbh->setPart($_GET["idcdl"], $_GET["idesame"], $_GET["idstudygroup"], $_SESSION["username"]);
-}
-
-if(isset($_SESSION["username"])){
-    $templateParams["amministratore"] = $dbh->isAdmin($_SESSION["username"])[0]["amministratore"];
-    $templateParams["nomeutente"] = $dbh->getNameUser($_SESSION["username"])[0]["nome"];
-} else {
-    $templateParams["amministratore"] = 9;
-    $templateParams["nomeutente"] = "";
-}
 $templateParams["studygroupscadenza"] = $dbh->getStGrScad();
 
 if(isset($_SESSION["username"])){
+    $templateParams["partecipanti"] = $dbh->getPartecipanti($_GET["idcdl"], $_GET["idesame"], $_GET["idstudygroup"]);
+    if(isset($_POST["tema"]) && isset($_POST["luogo"]) && isset($_POST["data"]) && isset($_POST["ora"]) && isset($_POST["lingua"])){
+        $templateParams["ritorno-variazionesg"] = $dbh->updateSg($_GET["idcdl"], $_GET["idesame"], $_GET["idstudygroup"], $_POST["tema"], $_POST["luogo"], $_POST["dettaglioluogo"], $_POST["data"], $_POST["ora"], $_POST["lingua"]);
+        $templateParams["maxidnotifica"] = $dbh->getLastIdNotificaSg($_GET["idcdl"], $_GET["idesame"], $_GET["idstudygroup"])[0]["lastnotifica"] + 1;
+        if(empty($templateParams["maxidnotifica"])){
+            $templateParams["maxidnotifica"] = 1;
+        }
+        $templateParams["notifica-variazione"] = $dbh->setNotificaVariazione($_GET["idcdl"], $_GET["idesame"], $_GET["idstudygroup"], $templateParams["maxidnotifica"], $_SESSION["username"]);
+        foreach($templateParams["partecipanti"] as $partecipante){
+            $templateParams["invio-notifica-var"][$partecipante["username"]] = $dbh->sendNotificaToPart($_GET["idcdl"], $_GET["idesame"], $_GET["idstudygroup"], $templateParams["maxidnotifica"], $partecipante["username"]);
+        }
+    }
+    
+
+    if(isset($_POST["iscrivi"])){
+        $templateParams["ritorno-iscrivi"] = $dbh->setPart($_GET["idcdl"], $_GET["idesame"], $_GET["idstudygroup"], $_SESSION["username"]);
+    }
+    $templateParams["amministratore"] = $dbh->isAdmin($_SESSION["username"])[0]["amministratore"];
+    $templateParams["nomeutente"] = $dbh->getNameUser($_SESSION["username"])[0]["nome"];
     $templateParams["titolo"] = "StudyBo - Study Group";
     $templateParams["nome"] = "studygroup.php";
     $templateParams["partecipante"] = $dbh->getPartecipantiByUser($_GET["idcdl"], $_GET["idesame"], $_GET["idstudygroup"], $_SESSION["username"]);
@@ -60,6 +64,8 @@ if(isset($_SESSION["username"])){
         $templateParams["titolo"] = "StudyBo - disiscrizione";
     }
 } else {
+    $templateParams["amministratore"] = 9;
+    $templateParams["nomeutente"] = "";
     $templateParams["titolo"] = "StudyBo - Accesso negato";
     $templateParams["nome"] = "accesso-negato.php";
 }
