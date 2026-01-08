@@ -215,3 +215,39 @@ div.img-destra img{
     object-fit: cover;          
     display: block;
 }
+
+#cookie-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #222;
+    color: #fff;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 9999;
+}
+
+#cookie-banner p {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+#cookie-banner button {
+    margin-left: 10px;
+    padding: 8px 12px;
+    border: none;
+    cursor: pointer;
+}
+
+#accept-cookies {
+    background: #4CAF50;
+    color: white;
+}
+
+#reject-cookies {
+    background: #f44336;
+    color: white;
+}
