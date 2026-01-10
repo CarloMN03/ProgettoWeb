@@ -10,44 +10,50 @@ class DatabaseHelper {
     }
     
     public function getAllCdl(){
-        $stmt = $this->db->prepare("SELECT ID, Nome, Campus FROM cdl ORDER BY Nome");
+        $stmt = $this->db->prepare("SELECT idcdl, nomecdl, sede, img, durata FROM cdl ORDER BY sede, nomecdl");
         $stmt->execute();
         $result = $stmt->get_result();
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
     public function getCdlById($id){
-        $stmt = $this->db->prepare("SELECT ID, Nome, Campus FROM cdl WHERE ID = ?");
+        $stmt = $this->db->prepare("SELECT idcdl, nomecdl, sede, img, durata FROM cdl WHERE idcdl = ?");
         $stmt->bind_param('i', $id);
         $stmt->execute();
         $result = $stmt->get_result();
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
-    public function insertCdl($nome, $campus){
-        $query = "INSERT INTO cdl (Nome, Campus) VALUES (?, ?)";
+    public function insertCdl($nome, $campus, $img, $durata){
+        $stmtMax = $this->db->prepare("SELECT COALESCE(MAX(idcdl), 0) + 1 as nextid FROM cdl");
+        $stmtMax->execute();
+        $resultMax = $stmtMax->get_result();
+        $rowMax = $resultMax->fetch_assoc();
+        $idcdl = $rowMax['nextid'];
+
+        $query = "INSERT INTO cdl (idcdl, nomecdl, sede, img, durata) VALUES (?, ?, ?, ?, ?)";
         $stmt = $this->db->prepare($query);
-        $stmt->bind_param('ss', $nome, $campus);
+        $stmt->bind_param('isssi', $idcdl, $nome, $campus, $img, $durata);
         $stmt->execute();
-        return $stmt->insert_id;
+        return $idcdl;
     }
 
     public function updateCdl($id, $nome, $campus){
-        $query = "UPDATE cdl SET Nome = ?, Campus = ? WHERE ID = ?";
+        $query = "UPDATE cdl SET nomecdl = ?, sede = ? WHERE idcdl = ?";
         $stmt = $this->db->prepare($query);
         $stmt->bind_param('ssi', $nome, $campus, $id);
         return $stmt->execute();
     }
 
     public function deleteCdl($id){
-        $query = "DELETE FROM cdl WHERE ID = ?";
+        $query = "DELETE FROM cdl WHERE idcdl = ?";
         $stmt = $this->db->prepare($query);
         $stmt->bind_param('i', $id);
         return $stmt->execute();
     }
-
+    
     public function checkAdminLogin($username, $password){
-        $query = "SELECT ID, Name, Username FROM admin WHERE Username = ? AND Password = ?";
+        $query = "SELECT username, nome, cognome FROM user WHERE username = ? AND password = ? AND amministratore = '1'";
         $stmt = $this->db->prepare($query);
         $stmt->bind_param('ss', $username, $password);
         $stmt->execute();
@@ -56,23 +62,23 @@ class DatabaseHelper {
     }
 
     public function getAdminById($id){
-        $stmt = $this->db->prepare("SELECT ID, Name, Username FROM admin WHERE ID = ?");
-        $stmt->bind_param('i', $id);
+        $stmt = $this->db->prepare("SELECT username, cognome, nome FROM user WHERE username = ? AND amministratore = '1'");
+        $stmt->bind_param('s', $id);
         $stmt->execute();
         $result = $stmt->get_result();
         return $result->fetch_all(MYSQLI_ASSOC);
     }
-  
+    
     public function getUserById($id){
-        $stmt = $this->db->prepare("SELECT ID, Nome, Cognome, Email, Username FROM user WHERE ID = ?");
-        $stmt->bind_param('i', $id);
+        $stmt = $this->db->prepare("SELECT username, cognome, nome FROM user WHERE username = ? AND attivo = '1' AND amministratore = '0'");
+        $stmt->bind_param('s', $id);
         $stmt->execute();
         $result = $stmt->get_result();
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
     public function checkUserLogin($username, $password){
-        $query = "SELECT ID, Nome, Cognome, Email, Username FROM user WHERE Username = ? AND Password = ?";
+        $query = "SELECT username, nome, cognome FROM user WHERE username = ? AND password = ?";
         $stmt = $this->db->prepare($query);
         $stmt->bind_param('ss', $username, $password);
         $stmt->execute();
@@ -81,132 +87,192 @@ class DatabaseHelper {
     }
 
     public function insertUser($nome, $cognome, $email, $username, $password){
-        $query = "INSERT INTO user (Nome, Cognome, Email, Username, Password) VALUES (?, ?, ?, ?, ?)";
+        $query = "INSERT INTO user (username, cognome, nome, password, attivo, amministratore, imguser, idcdl) VALUES (?, ?, ?, ?, '1', '0', '', NULL)";
         $stmt = $this->db->prepare($query);
-        $stmt->bind_param('sssss', $nome, $cognome, $email, $username, $password);
+        $stmt->bind_param('ssss', $username, $cognome, $nome, $password);
         $stmt->execute();
-        return $stmt->insert_id;
+        return $username;
     }
 
-    public function updateUser($id, $nome, $cognome, $email, $username){
-        $query = "UPDATE user SET Nome = ?, Cognome = ?, Email = ?, Username = ? WHERE ID = ?";
+    public function updateUser($username, $cognome, $nome){
+        $query = "UPDATE user SET nome = ?, cognome = ? WHERE username = ?";
         $stmt = $this->db->prepare($query);
-        $stmt->bind_param('ssssi', $nome, $cognome, $email, $username, $id);
+        $stmt->bind_param('sss', $nome, $cognome, $username);
         return $stmt->execute();
     }
 
     public function updateUserPassword($id, $password){
-        $query = "UPDATE user SET Password = ? WHERE ID = ?";
+        $query = "UPDATE user SET password = ? WHERE username = ?";
         $stmt = $this->db->prepare($query);
-        $stmt->bind_param('si', $password, $id);
+        $stmt->bind_param('ss', $password, $id);
         return $stmt->execute();
     }
 
     public function deleteUser($id){
-        $query = "DELETE FROM user WHERE ID = ?";
+        $query = "DELETE FROM user WHERE username = ?";
         $stmt = $this->db->prepare($query);
-        $stmt->bind_param('i', $id);
+        $stmt->bind_param('s', $id);
         return $stmt->execute();
     }
-  
+    
     public function getAllEsami(){
-        $stmt = $this->db->prepare("SELECT ID, Nome, Professore, Anno, cdl FROM esame ORDER BY Nome");
+        $stmt = $this->db->prepare("SELECT idcdl, idesame, nomeesame, annoesame, imgesame FROM esame ORDER BY nomeesame");
         $stmt->execute();
         $result = $stmt->get_result();
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
     public function getEsamiByCdl($idCdl){
-        $stmt = $this->db->prepare("SELECT ID, Nome, Professore, Anno, cdl FROM esame WHERE cdl = ? ORDER BY Nome");
+        $stmt = $this->db->prepare("SELECT idcdl, idesame, nomeesame, annoesame, imgesame FROM esame WHERE idcdl = ? ORDER BY nomeesame");
         $stmt->bind_param('i', $idCdl);
         $stmt->execute();
         $result = $stmt->get_result();
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
-    public function getEsameById($id){
-        $stmt = $this->db->prepare("SELECT ID, Nome, Professore, Anno, cdl FROM esame WHERE ID = ?");
-        $stmt->bind_param('i', $id);
+    public function getEsameById($idesame){
+        $stmt = $this->db->prepare("SELECT idcdl, idesame, nomeesame, annoesame, imgesame FROM esame WHERE idesame = ?");
+        $stmt->bind_param('i', $idesame);
         $stmt->execute();
         $result = $stmt->get_result();
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
-    public function insertEsame($nome, $professore, $anno, $idCdl){
-        $query = "INSERT INTO esame (Nome, Professore, Anno, cdl) VALUES (?, ?, ?, ?)";
+    public function insertEsame($nome, $anno, $idCdl, $imgesame){
+        $stmtMax = $this->db->prepare("SELECT COALESCE(MAX(idesame), 0) + 1 as nextid FROM esame");
+        $stmtMax->execute();
+        $resultMax = $stmtMax->get_result();
+        $rowMax = $resultMax->fetch_assoc();
+        $idesame = $rowMax['nextid'];
+
+        $query = "INSERT INTO esame (idcdl, idesame, nomeesame, annoesame, imgesame) VALUES (?, ?, ?, ?, ?)";
         $stmt = $this->db->prepare($query);
-        $stmt->bind_param('ssii', $nome, $professore, $anno, $idCdl);
+        $stmt->bind_param('iisis', $idCdl, $idesame, $nome, $anno, $imgesame);
         $stmt->execute();
-        return $stmt->insert_id;
+        return $idesame;
     }
 
-    public function updateEsame($id, $nome, $professore, $anno, $idCdl){
-        $query = "UPDATE esame SET Nome = ?, Professore = ?, Anno = ?, cdl = ? WHERE ID = ?";
+    public function updateEsame($id, $nome, $anno, $idCdl, $imgesame){
+        $query = "UPDATE esame SET nomeesame = ?, annoesame = ?, idcdl = ?, imgesame = ? WHERE idesame = ?";
         $stmt = $this->db->prepare($query);
-        $stmt->bind_param('sssii', $nome, $professore, $anno, $idCdl, $id);
+        $stmt->bind_param('siisi', $nome, $anno, $idCdl, $imgesame, $id);
         return $stmt->execute();
     }
 
     public function deleteEsame($id){
-        $query = "DELETE FROM esame WHERE ID = ?";
+        $query = "DELETE FROM esame WHERE idesame = ?";
         $stmt = $this->db->prepare($query);
         $stmt->bind_param('i', $id);
         return $stmt->execute();
     }
-
+    
     public function getAllLingue(){
-        $stmt = $this->db->prepare("SELECT ID, Nome FROM lingua ORDER BY Nome");
+        $stmt = $this->db->prepare("SELECT idlingua, descrizionelingua FROM lingua ORDER BY descrizionelingua");
         $stmt->execute();
         $result = $stmt->get_result();
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
     public function getLinguaById($id){
-        $stmt = $this->db->prepare("SELECT ID, Nome FROM lingua WHERE ID = ?");
-        $stmt->bind_param('i', $id);
+        $stmt = $this->db->prepare("SELECT idlingua, descrizionelingua FROM lingua WHERE idlingua = ?");
+        $stmt->bind_param('s', $id);
         $stmt->execute();
         $result = $stmt->get_result();
         return $result->fetch_all(MYSQLI_ASSOC);
     }
-
+    
     public function getAllStudyGroups(){
-        $query = "SELECT ID, Tema, Luogo, Data, Ora, Esame, Lingua, Partecipanti FROM studygroup ORDER BY Data DESC, Ora DESC";
+        $query = "SELECT sg.idcdl, sg.idesame, sg.idstudygroup, sg.tema, sg.luogo, sg.data, sg.ora, 
+                  sg.idlingua, 0 as Partecipanti 
+                  FROM studygroup sg ORDER BY sg.data DESC, sg.ora DESC";
         $stmt = $this->db->prepare($query);
         $stmt->execute();
         $result = $stmt->get_result();
-        return $result->fetch_all(MYSQLI_ASSOC);
+        $rows = $result->fetch_all(MYSQLI_ASSOC);
+        
+        foreach ($rows as &$row) {
+            $countStmt = $this->db->prepare("SELECT COUNT(*) as num FROM adesione WHERE idstudygroup = ?");
+            $countStmt->bind_param('i', $row['idstudygroup']);
+            $countStmt->execute();
+            $countResult = $countStmt->get_result();
+            $countRow = $countResult->fetch_assoc();
+            $row['Partecipanti'] = $countRow['num'];
+        }
+        
+        return $rows;
     }
 
     public function getStudyGroupById($id){
-        $query = "SELECT ID, Tema, Luogo, Data, Ora, Esame, Lingua, Partecipanti FROM studygroup WHERE ID = ?";
+        $query = "SELECT sg.idcdl, sg.idesame, sg.idstudygroup, sg.tema, sg.luogo, sg.data, sg.ora, 
+                  sg.idlingua, 0 as Partecipanti 
+                  FROM studygroup sg WHERE sg.idstudygroup = ?";
         $stmt = $this->db->prepare($query);
         $stmt->bind_param('i', $id);
         $stmt->execute();
         $result = $stmt->get_result();
-        return $result->fetch_all(MYSQLI_ASSOC);
+        $rows = $result->fetch_all(MYSQLI_ASSOC);
+        
+        if (!empty($rows)) {
+            $countStmt = $this->db->prepare("SELECT COUNT(*) as num FROM adesione WHERE idstudygroup = ?");
+            $countStmt->bind_param('i', $id);
+            $countStmt->execute();
+            $countResult = $countStmt->get_result();
+            $countRow = $countResult->fetch_assoc();
+            $rows[0]['Partecipanti'] = $countRow['num'];
+        }
+        
+        return $rows;
     }
 
     public function getStudyGroupsByEsame($idEsame){
-        $query = "SELECT ID, Tema, Luogo, Data, Ora, Esame, Lingua, Partecipanti FROM studygroup WHERE Esame = ? ORDER BY Data DESC, Ora DESC";
+        $query = "SELECT sg.idcdl, sg.idesame, sg.idstudygroup, sg.tema, sg.luogo, sg.data, sg.ora, 
+                  sg.idlingua, 0 as Partecipanti 
+                  FROM studygroup sg WHERE sg.idesame = ? ORDER BY sg.data DESC, sg.ora DESC";
         $stmt = $this->db->prepare($query);
         $stmt->bind_param('i', $idEsame);
         $stmt->execute();
         $result = $stmt->get_result();
-        return $result->fetch_all(MYSQLI_ASSOC);
+        $rows = $result->fetch_all(MYSQLI_ASSOC);
+        
+        foreach ($rows as &$row) {
+            $countStmt = $this->db->prepare("SELECT COUNT(*) as num FROM adesione WHERE idstudygroup = ?");
+            $countStmt->bind_param('i', $row['idstudygroup']);
+            $countStmt->execute();
+            $countResult = $countStmt->get_result();
+            $countRow = $countResult->fetch_assoc();
+            $row['Partecipanti'] = $countRow['num'];
+        }
+        
+        return $rows;
     }
 
     public function getStudyGroupsByDate($data){
-        $query = "SELECT ID, Tema, Luogo, Data, Ora, Esame, Lingua, Partecipanti FROM studygroup WHERE Data = ? ORDER BY Ora";
+        $query = "SELECT sg.idcdl, sg.idesame, sg.idstudygroup, sg.tema, sg.luogo, sg.data, sg.ora, 
+                  sg.idlingua, 0 as Partecipanti 
+                  FROM studygroup sg WHERE sg.data = ? ORDER BY sg.ora";
         $stmt = $this->db->prepare($query);
         $stmt->bind_param('s', $data);
         $stmt->execute();
         $result = $stmt->get_result();
-        return $result->fetch_all(MYSQLI_ASSOC);
+        $rows = $result->fetch_all(MYSQLI_ASSOC);
+        
+        foreach ($rows as &$row) {
+            $countStmt = $this->db->prepare("SELECT COUNT(*) as num FROM adesione WHERE idstudygroup = ?");
+            $countStmt->bind_param('i', $row['idstudygroup']);
+            $countStmt->execute();
+            $countResult = $countStmt->get_result();
+            $countRow = $countResult->fetch_assoc();
+            $row['Partecipanti'] = $countRow['num'];
+        }
+        
+        return $rows;
     }
 
     public function getUpcomingStudyGroups($limit = -1){
         $today = date('Y-m-d');
-        $query = "SELECT ID, Tema, Luogo, Data, Ora, Esame, Lingua, Partecipanti FROM studygroup WHERE Data >= ? ORDER BY Data, Ora";
+        $query = "SELECT sg.idcdl, sg.idesame, sg.idstudygroup, sg.tema, sg.luogo, sg.data, sg.ora, 
+                  sg.idlingua, 0 as Partecipanti 
+                  FROM studygroup sg WHERE sg.data >= ? ORDER BY sg.data, sg.ora";
         if($limit > 0){
             $query .= " LIMIT ?";
         }
@@ -218,145 +284,202 @@ class DatabaseHelper {
         }
         $stmt->execute();
         $result = $stmt->get_result();
-        return $result->fetch_all(MYSQLI_ASSOC);
+        $rows = $result->fetch_all(MYSQLI_ASSOC);
+        
+        foreach ($rows as &$row) {
+            $countStmt = $this->db->prepare("SELECT COUNT(*) as num FROM adesione WHERE idstudygroup = ?");
+            $countStmt->bind_param('i', $row['idstudygroup']);
+            $countStmt->execute();
+            $countResult = $countStmt->get_result();
+            $countRow = $countResult->fetch_assoc();
+            $row['Partecipanti'] = $countRow['num'];
+        }
+        
+        return $rows;
     }
 
     public function insertStudyGroup($tema, $luogo, $data, $ora, $idEsame, $idLingua, $partecipanti){
-        $query = "INSERT INTO studygroup (Tema, Luogo, Data, Ora, Esame, Lingua, Partecipanti) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        
+        $stmtMax = $this->db->prepare("SELECT COALESCE(MAX(idstudygroup), 0) + 1 as nextid FROM studygroup");
+        $stmtMax->execute();
+        $resultMax = $stmtMax->get_result();
+        $rowMax = $resultMax->fetch_assoc();
+        $idstudygroup = $rowMax['nextid'];
+        
+        $stmtCdl = $this->db->prepare("SELECT idcdl FROM esame WHERE idesame = ?");
+        $stmtCdl->bind_param('i', $idEsame);
+        $stmtCdl->execute();
+        $resultCdl = $stmtCdl->get_result();
+        $rowCdl = $resultCdl->fetch_assoc();
+        $idcdl = $rowCdl ? $rowCdl['idcdl'] : 1;
+        
+        $query = "INSERT INTO studygroup (idcdl, idesame, idstudygroup, idlingua, tema, luogo, dettaglioluogo, data, ora, amministratoresg) VALUES (?, ?, ?, ?, ?, ?, '', ?, ?, '')";
         $stmt = $this->db->prepare($query);
-        $stmt->bind_param('ssssiil', $tema, $luogo, $data, $ora, $idEsame, $idLingua, $partecipanti);
+        $stmt->bind_param('iiisssss', $idcdl, $idEsame, $idstudygroup, $idLingua, $tema, $luogo, $data, $ora);
         $stmt->execute();
-        return $stmt->insert_id;
+        return $idstudygroup;
     }
 
     public function updateStudyGroup($id, $tema, $luogo, $data, $ora, $idEsame, $idLingua, $partecipanti){
-        $query = "UPDATE studygroup SET Tema = ?, Luogo = ?, Data = ?, Ora = ?, Esame = ?, Lingua = ?, Partecipanti = ? WHERE ID = ?";
+        $query = "UPDATE studygroup SET tema = ?, luogo = ?, data = ?, ora = ?, idesame = ?, idlingua = ? WHERE idstudygroup = ?";
         $stmt = $this->db->prepare($query);
-        $stmt->bind_param('ssssiiii', $tema, $luogo, $data, $ora, $idEsame, $idLingua, $partecipanti, $id);
+        $stmt->bind_param('ssssisi', $tema, $luogo, $data, $ora, $idEsame, $idLingua, $id);
         return $stmt->execute();
     }
 
     public function updateStudyGroupPartecipanti($id, $partecipanti){
-        $query = "UPDATE studygroup SET Partecipanti = ? WHERE ID = ?";
-        $stmt = $this->db->prepare($query);
-        $stmt->bind_param('ii', $partecipanti, $id);
-        return $stmt->execute();
+        return true;
     }
 
     public function deleteStudyGroup($id){
-        $query = "DELETE FROM studygroup WHERE ID = ?";
+        $stmtAdesioni = $this->db->prepare("DELETE FROM adesione WHERE idstudygroup = ?");
+        $stmtAdesioni->bind_param('i', $id);
+        $stmtAdesioni->execute();
+        
+        $query = "DELETE FROM studygroup WHERE idstudygroup = ?";
         $stmt = $this->db->prepare($query);
         $stmt->bind_param('i', $id);
         return $stmt->execute();
     }
-
-    // Blocca un utente
+    
     public function blockUser($id){
-        $query = "UPDATE user SET Bloccato = 1 WHERE ID = ?";
+        $query = "UPDATE user SET attivo = '0' WHERE username = ?";
         $stmt = $this->db->prepare($query);
-        $stmt->bind_param('i', $id);
+        $stmt->bind_param('s', $id);
         return $stmt->execute();
     }
 
-    // Sblocca un utente
     public function unblockUser($id){
-        $query = "UPDATE user SET Bloccato = 0 WHERE ID = ?";
+        $query = "UPDATE user SET attivo = '1' WHERE username = ?";
         $stmt = $this->db->prepare($query);
-        $stmt->bind_param('i', $id);
+        $stmt->bind_param('s', $id);
         return $stmt->execute();
     }
 
-    // Rendi un utente amministratore
     public function makeUserAdmin($id){
-        $query = "UPDATE user SET IsAdmin = 1 WHERE ID = ?";
+        $query = "UPDATE user SET amministratore = '1' WHERE username = ?";
         $stmt = $this->db->prepare($query);
-        $stmt->bind_param('i', $id);
+        $stmt->bind_param('s', $id);
         return $stmt->execute();
     }
 
-    // Rimuovi privilegi di amministratore
     public function removeUserAdmin($id){
-        $query = "UPDATE user SET IsAdmin = 0 WHERE ID = ?";
+        $query = "UPDATE user SET amministratore = '0' WHERE username = ?";
         $stmt = $this->db->prepare($query);
-        $stmt->bind_param('i', $id);
+        $stmt->bind_param('s', $id);
         return $stmt->execute();
     }
-
-    // Ottieni tutti gli utenti normali (non bloccati, non admin)
+    
     public function getNormalUsers(){
-        $stmt = $this->db->prepare("SELECT ID, Nome, Cognome, Email, Username, Bloccato, IsAdmin FROM user WHERE Bloccato = 0 AND IsAdmin = 0 ORDER BY Cognome, Nome");
+        $stmt = $this->db->prepare("SELECT username, nome, cognome, 
+                                      CASE WHEN attivo='0' THEN 1 ELSE 0 END as Bloccato, 
+                                      CASE WHEN amministratore='1' THEN 1 ELSE 0 END as IsAdmin 
+                                      FROM user WHERE attivo = '1' AND amministratore = '0' ORDER BY cognome, nome");
         $stmt->execute();
         $result = $stmt->get_result();
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
-    // Ottieni tutti gli utenti bloccati
     public function getBlockedUsers(){
-        $stmt = $this->db->prepare("SELECT ID, Nome, Cognome, Email, Username, Bloccato, IsAdmin FROM user WHERE Bloccato = 1 ORDER BY Cognome, Nome");
+        $stmt = $this->db->prepare("SELECT username, nome, cognome, 
+                                      CASE WHEN attivo='0' THEN 1 ELSE 0 END as Bloccato, 
+                                      CASE WHEN amministratore='1' THEN 1 ELSE 0 END as IsAdmin 
+                                      FROM user WHERE attivo = '0' ORDER BY cognome, nome");
         $stmt->execute();
         $result = $stmt->get_result();
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
-    // Ottieni tutti gli amministratori
     public function getAdminUsers(){
-        $stmt = $this->db->prepare("SELECT ID, Nome, Cognome, Email, Username, Bloccato, IsAdmin FROM user WHERE IsAdmin = 1 ORDER BY Cognome, Nome");
+        $stmt = $this->db->prepare("SELECT username, nome, cognome, 
+                                      CASE WHEN attivo='0' THEN 1 ELSE 0 END as Bloccato, 
+                                      CASE WHEN amministratore='1' THEN 1 ELSE 0 END as IsAdmin 
+                                      FROM user WHERE amministratore = '1' ORDER BY cognome, nome");
         $stmt->execute();
         $result = $stmt->get_result();
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
-    // Modifica il metodo getAllUsers esistente per includere i nuovi campi
     public function getAllUsers(){
-        $stmt = $this->db->prepare("SELECT ID, Nome, Cognome, Email, Username, Bloccato, IsAdmin FROM user ORDER BY Cognome, Nome");
+        $stmt = $this->db->prepare("SELECT username, nome, cognome, 
+                                      CASE WHEN attivo='0' THEN 1 ELSE 0 END as Bloccato, 
+                                      CASE WHEN amministratore='1' THEN 1 ELSE 0 END as IsAdmin 
+                                      FROM user ORDER BY cognome, nome");
         $stmt->execute();
         $result = $stmt->get_result();
         return $result->fetch_all(MYSQLI_ASSOC);
     }
-
-    // Ottiene tutti i gruppi di studio con informazioni complete (JOIN)
+    
     public function getStudyGroupsWithDetails(){
         $query = "SELECT 
-                    sg.ID, sg.Tema, sg.Luogo, sg.Data, sg.Ora, sg.Partecipanti,
-                    e.Nome as NomeEsame,
-                    c.Nome as NomeCdl,
-                    l.Nome as NomeLingua
+                    sg.idstudygroup,
+                    sg.idcdl,
+                    sg.idesame,
+                    sg.tema, 
+                    sg.luogo, 
+                    sg.data, 
+                    sg.ora, 
+                    0 as Partecipanti,
+                    e.nomeesame as NomeEsame,
+                    e.imgesame as ImgEsame,
+                    c.nomecdl as NomeCdl,
+                    l.descrizionelingua as NomeLingua
                   FROM studygroup sg
-                  JOIN esame e ON sg.Esame = e.ID
-                  JOIN cdl c ON e.cdl = c.ID
-                  JOIN lingua l ON sg.Lingua = l.ID
-                  ORDER BY sg.Data DESC, sg.Ora DESC";
+                  JOIN esame e ON sg.idesame = e.idesame AND sg.idcdl = e.idcdl
+                  JOIN cdl c ON e.idcdl = c.idcdl
+                  JOIN lingua l ON sg.idlingua = l.idlingua
+                  ORDER BY sg.data DESC, sg.ora DESC";
         $stmt = $this->db->prepare($query);
         $stmt->execute();
         $result = $stmt->get_result();
-        return $result->fetch_all(MYSQLI_ASSOC);
+        $rows = $result->fetch_all(MYSQLI_ASSOC);
+        
+        foreach ($rows as &$row) {
+            $countStmt = $this->db->prepare("SELECT COUNT(*) as num FROM adesione WHERE idstudygroup = ?");
+            $countStmt->bind_param('i', $row['idstudygroup']);
+            $countStmt->execute();
+            $countResult = $countStmt->get_result();
+            $countRow = $countResult->fetch_assoc();
+            $row['Partecipanti'] = $countRow['num'];
+        }
+        
+        return $rows;
     }
 
-    // Cerca studygroup per keyword nel tema
     public function searchStudyGroupsByTema($keyword){
-        $query = "SELECT ID, Tema, Luogo, Data, Ora, Esame, Lingua, Partecipanti 
-                  FROM studygroup 
-                  WHERE Tema LIKE ? 
-                  ORDER BY Data DESC, Ora DESC";
+        $query = "SELECT sg.idcdl, sg.idesame, sg.idstudygroup, sg.tema, sg.luogo, sg.data, sg.ora, 
+                  sg.idlingua, 0 as Partecipanti 
+                  FROM studygroup sg 
+                  WHERE sg.tema LIKE ? 
+                  ORDER BY sg.data DESC, sg.ora DESC";
         $stmt = $this->db->prepare($query);
         $searchTerm = "%{$keyword}%";
         $stmt->bind_param('s', $searchTerm);
         $stmt->execute();
         $result = $stmt->get_result();
-        return $result->fetch_all(MYSQLI_ASSOC);
+        $rows = $result->fetch_all(MYSQLI_ASSOC);
+        
+        foreach ($rows as &$row) {
+            $countStmt = $this->db->prepare("SELECT COUNT(*) as num FROM adesione WHERE idstudygroup = ?");
+            $countStmt->bind_param('i', $row['idstudygroup']);
+            $countStmt->execute();
+            $countResult = $countStmt->get_result();
+            $countRow = $countResult->fetch_assoc();
+            $row['Partecipanti'] = $countRow['num'];
+        }
+        
+        return $rows;
     }
 
-    // Conta il numero di studygroup per esame
     public function countStudyGroupsByEsame($idEsame){
-        $stmt = $this->db->prepare("SELECT COUNT(*) as totale FROM studygroup WHERE Esame = ?");
+        $stmt = $this->db->prepare("SELECT COUNT(*) as totale FROM studygroup WHERE idesame = ?");
         $stmt->bind_param('i', $idEsame);
         $stmt->execute();
         $result = $stmt->get_result();
         $row = $result->fetch_assoc();
         return $row['totale'];
     }
-
-    // Chiude la connessione al database
+    
     public function closeConnection(){
         $this->db->close();
     }

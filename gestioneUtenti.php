@@ -12,9 +12,9 @@ $errore = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     if (isset($_POST['azione']) && $_POST['azione'] === 'elimina') {
-        $id = intval($_POST['id'] ?? 0);
-        if ($id > 0) {
-            $result = $db->deleteUser($id);
+        $username = trim($_POST['username'] ?? '');
+        if (!empty($username)) {
+            $result = $db->deleteUser($username);
             if ($result) {
                 $messaggio = 'Utente eliminato con successo!';
             } else {
@@ -24,9 +24,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     
     if (isset($_POST['azione']) && $_POST['azione'] === 'blocca') {
-        $id = intval($_POST['id'] ?? 0);
-        if ($id > 0) {
-            $result = $db->blockUser($id);
+        $username = trim($_POST['username'] ?? '');
+        if (!empty($username)) {
+            $result = $db->blockUser($username);
             if ($result) {
                 $messaggio = 'Utente bloccato con successo!';
             } else {
@@ -36,9 +36,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     
     if (isset($_POST['azione']) && $_POST['azione'] === 'sblocca') {
-        $id = intval($_POST['id'] ?? 0);
-        if ($id > 0) {
-            $result = $db->unblockUser($id);
+        $username = trim($_POST['username'] ?? '');
+        if (!empty($username)) {
+            $result = $db->unblockUser($username);
             if ($result) {
                 $messaggio = 'Utente sbloccato con successo!';
             } else {
@@ -48,9 +48,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     
     if (isset($_POST['azione']) && $_POST['azione'] === 'rendi_admin') {
-        $id = intval($_POST['id'] ?? 0);
-        if ($id > 0) {
-            $result = $db->makeUserAdmin($id);
+        $username = trim($_POST['username'] ?? '');
+        if (!empty($username)) {
+            $result = $db->makeUserAdmin($username);
             if ($result) {
                 $messaggio = 'Utente promosso ad amministratore!';
             } else {
@@ -60,9 +60,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     
     if (isset($_POST['azione']) && $_POST['azione'] === 'rimuovi_admin') {
-        $id = intval($_POST['id'] ?? 0);
-        if ($id > 0) {
-            $result = $db->removeUserAdmin($id);
+        $username = trim($_POST['username'] ?? '');
+        if (!empty($username)) {
+            $result = $db->removeUserAdmin($username);
             if ($result) {
                 $messaggio = 'Privilegi di amministratore rimossi!';
             } else {
@@ -93,6 +93,18 @@ $amministratori = $db->getAdminUsers();
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="css/style.css">
     <title>StudyBo - Gestione Utenti</title>
+    <style>
+        .user-stats {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .user-stats p {
+            margin: 5px 0;
+            font-weight: bold;
+        }
+    </style>
 </head>
 
 <body>
@@ -122,9 +134,16 @@ $amministratori = $db->getAdminUsers();
         <div class="alert alert-error"><?php echo $errore; ?></div>
     <?php endif; ?>
 
+    <div class="user-stats">
+        <p>📊 Statistiche Sistema</p>
+        <p>Utenti Attivi: <?php echo count($utentiNormali); ?> | 
+           Utenti Bloccati: <?php echo count($utentiBloccati); ?> | 
+           Amministratori: <?php echo count($amministratori); ?></p>
+    </div>
+
     <section class="container">
         <div class="list">
-            <h2>Utenti (<?php echo count($utentiNormali); ?>)</h2>
+            <h2>Utenti Attivi (<?php echo count($utentiNormali); ?>)</h2>
 
             <?php if (empty($utentiNormali)): ?>
                 <div class="card">
@@ -133,23 +152,22 @@ $amministratori = $db->getAdminUsers();
             <?php else: ?>
                 <?php foreach ($utentiNormali as $utente): ?>
                     <div class="card">
-                        <h3><?php echo htmlspecialchars($utente['Nome'] . ' ' . $utente['Cognome']); ?></h3>
-                        <p><strong>Email:</strong> <?php echo htmlspecialchars($utente['Email']); ?></p>
-                        <p><strong>Username:</strong> <?php echo htmlspecialchars($utente['Username']); ?></p>
+                        <h3><?php echo htmlspecialchars($utente['nome'] . ' ' . $utente['cognome']); ?></h3>
+                        <p><strong>Username:</strong> <?php echo htmlspecialchars($utente['username']); ?></p>
                         <div class="card-buttons">
-                            <form method="POST" style="display: inline;">
+                            <form method="POST" style="display: inline;" onsubmit="return confirm('Sei sicuro di voler bloccare questo utente?');">
                                 <input type="hidden" name="azione" value="blocca">
-                                <input type="hidden" name="id" value="<?php echo $utente['ID']; ?>">
+                                <input type="hidden" name="username" value="<?php echo htmlspecialchars($utente['username']); ?>">
                                 <button class="btn-block" type="submit">Blocca</button>
                             </form>
-                            <form method="POST" style="display: inline;" onsubmit="return confirm('Sei sicuro di voler eliminare questo utente?');">
+                            <form method="POST" style="display: inline;" onsubmit="return confirm('Sei sicuro di voler eliminare questo utente? Questa azione è irreversibile!');">
                                 <input type="hidden" name="azione" value="elimina">
-                                <input type="hidden" name="id" value="<?php echo $utente['ID']; ?>">
+                                <input type="hidden" name="username" value="<?php echo htmlspecialchars($utente['username']); ?>">
                                 <button class="btn-delete" type="submit">Elimina</button>
                             </form>
-                            <form method="POST" style="display: inline;">
+                            <form method="POST" style="display: inline;" onsubmit="return confirm('Confermi di voler rendere questo utente amministratore?');">
                                 <input type="hidden" name="azione" value="rendi_admin">
-                                <input type="hidden" name="id" value="<?php echo $utente['ID']; ?>">
+                                <input type="hidden" name="username" value="<?php echo htmlspecialchars($utente['username']); ?>">
                                 <button class="btn-add" type="submit">Rendi Amministratore</button>
                             </form>
                         </div>
@@ -164,19 +182,18 @@ $amministratori = $db->getAdminUsers();
                 </div>
             <?php else: ?>
                 <?php foreach ($utentiBloccati as $utente): ?>
-                    <div class="card">
-                        <h3><?php echo htmlspecialchars($utente['Nome'] . ' ' . $utente['Cognome']); ?></h3>
-                        <p><strong>Email:</strong> <?php echo htmlspecialchars($utente['Email']); ?></p>
-                        <p><strong>Username:</strong> <?php echo htmlspecialchars($utente['Username']); ?></p>
+                    <div class="card" style="background-color: #fff3cd; border-left: 4px solid #ffc107;">
+                        <h3><?php echo htmlspecialchars($utente['nome'] . ' ' . $utente['cognome']); ?> <span style="color: #856404;">🔒 BLOCCATO</span></h3>
+                        <p><strong>Username:</strong> <?php echo htmlspecialchars($utente['username']); ?></p>
                         <div class="card-buttons">
                             <form method="POST" style="display: inline;">
                                 <input type="hidden" name="azione" value="sblocca">
-                                <input type="hidden" name="id" value="<?php echo $utente['ID']; ?>">
+                                <input type="hidden" name="username" value="<?php echo htmlspecialchars($utente['username']); ?>">
                                 <button class="btn-unblock" type="submit">Sblocca</button>
                             </form>
-                            <form method="POST" style="display: inline;" onsubmit="return confirm('Sei sicuro di voler eliminare questo utente?');">
+                            <form method="POST" style="display: inline;" onsubmit="return confirm('Sei sicuro di voler eliminare questo utente? Questa azione è irreversibile!');">
                                 <input type="hidden" name="azione" value="elimina">
-                                <input type="hidden" name="id" value="<?php echo $utente['ID']; ?>">
+                                <input type="hidden" name="username" value="<?php echo htmlspecialchars($utente['username']); ?>">
                                 <button class="btn-delete" type="submit">Elimina</button>
                             </form>
                         </div>
@@ -193,19 +210,21 @@ $amministratori = $db->getAdminUsers();
                 </div>
             <?php else: ?>
                 <?php foreach ($amministratori as $admin): ?>
-                    <div class="card">
-                        <h3><?php echo htmlspecialchars($admin['Nome'] . ' ' . $admin['Cognome']); ?></h3>
-                        <p><strong>Email:</strong> <?php echo htmlspecialchars($admin['Email']); ?></p>
-                        <p><strong>Username:</strong> <?php echo htmlspecialchars($admin['Username']); ?></p>
+                    <div class="card" style="background-color: #d1ecf1; border-left: 4px solid #0c5460;">
+                        <h3><?php echo htmlspecialchars($admin['nome'] . ' ' . $admin['cognome']); ?> <span style="color: #0c5460;">👑 ADMIN</span></h3>
+                        <p><strong>Username:</strong> <?php echo htmlspecialchars($admin['username']); ?></p>
+                        <?php if ($admin['Bloccato']): ?>
+                            <p style="color: #856404;"><strong>⚠️ ACCOUNT BLOCCATO</strong></p>
+                        <?php endif; ?>
                         <div class="card-buttons">
-                            <form method="POST" style="display: inline;">
+                            <form method="POST" style="display: inline;" onsubmit="return confirm('Sei sicuro di voler rimuovere i privilegi di amministratore a questo utente?');">
                                 <input type="hidden" name="azione" value="rimuovi_admin">
-                                <input type="hidden" name="id" value="<?php echo $admin['ID']; ?>">
-                                <button class="btn-block" type="submit">Rimuovi Amministratore</button>
+                                <input type="hidden" name="username" value="<?php echo htmlspecialchars($admin['username']); ?>">
+                                <button class="btn-block" type="submit">Rimuovi Admin</button>
                             </form>
-                            <form method="POST" style="display: inline;" onsubmit="return confirm('Sei sicuro di voler eliminare questo amministratore?');">
+                            <form method="POST" style="display: inline;" onsubmit="return confirm('Sei sicuro di voler eliminare questo amministratore? Questa azione è irreversibile!');">
                                 <input type="hidden" name="azione" value="elimina">
-                                <input type="hidden" name="id" value="<?php echo $admin['ID']; ?>">
+                                <input type="hidden" name="username" value="<?php echo htmlspecialchars($admin['username']); ?>">
                                 <button class="btn-delete" type="submit">Elimina</button>
                             </form>
                         </div>

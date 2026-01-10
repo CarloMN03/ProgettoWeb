@@ -13,37 +13,39 @@ $editing = null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     if (isset($_POST['azione']) && $_POST['azione'] === 'aggiungi') {
-        $nome = trim($_POST['nome'] ?? '');
-        $campus = trim($_POST['campus'] ?? '');
+        $nome = trim($_POST['nomecdl'] ?? '');
+        $campus = trim($_POST['sede'] ?? '');
+        $img = trim($_POST['img'] ?? '');
+        $durata = intval($_POST['durata'] ?? 3);
         
         if (!empty($nome) && !empty($campus)) {
-            $result = $db->insertCdl($nome, $campus);
+            $result = $db->insertCdl($nome, $campus, $img, $durata);
             if ($result) {
                 $messaggio = 'Corso aggiunto con successo!';
             } else {
                 $errore = 'Errore durante l\'aggiunta del corso.';
             }
         } else {
-            $errore = 'Compila tutti i campi per aggiungere un corso.';
+            $errore = 'Compila tutti i campi obbligatori per aggiungere un corso.';
         }
     }
     
     if (isset($_POST['azione']) && $_POST['azione'] === 'elimina') {
-        $id = intval($_POST['id'] ?? 0);
+        $id = intval($_POST['idcdl'] ?? 0);
         if ($id > 0) {
             $result = $db->deleteCdl($id);
             if ($result) {
                 $messaggio = 'Corso eliminato con successo!';
             } else {
-                $errore = 'Errore durante l\'eliminazione del corso.';
+                $errore = 'Errore durante l\'eliminazione del corso. Potrebbe avere esami associati.';
             }
         }
     }
     
     if (isset($_POST['azione']) && $_POST['azione'] === 'modifica') {
-        $id = intval($_POST['id'] ?? 0);
-        $nome = trim($_POST['nome'] ?? '');
-        $campus = trim($_POST['campus'] ?? '');
+        $id = intval($_POST['idcdl'] ?? 0);
+        $nome = trim($_POST['nomecdl'] ?? '');
+        $campus = trim($_POST['sede'] ?? '');
         
         if ($id > 0 && !empty($nome) && !empty($campus)) {
             $result = $db->updateCdl($id, $nome, $campus);
@@ -77,6 +79,15 @@ if (isset($_GET['err'])) {
 }
 
 $corsiLaurea = $db->getAllCdl();
+
+$corsiPerCampus = [];
+foreach ($corsiLaurea as $corso) {
+    $campus = $corso['sede'];
+    if (!isset($corsiPerCampus[$campus])) {
+        $corsiPerCampus[$campus] = [];
+    }
+    $corsiPerCampus[$campus][] = $corso;
+}
 ?>
 <!DOCTYPE html>
 <html lang="it">
@@ -85,6 +96,28 @@ $corsiLaurea = $db->getAllCdl();
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="css/style.css">
     <title>StudyBo - Gestione Corsi di Laurea</title>
+    <style>
+        .card-image {
+            width: 100%;
+            max-width: 200px;
+            height: auto;
+            margin: 10px 0;
+            border-radius: 8px;
+        }
+        .card-info {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+        .card-text {
+            flex: 1;
+        }
+        .no-image {
+            color: #999;
+            font-style: italic;
+            font-size: 0.9em;
+        }
+    </style>
 </head>
 
 <body>
@@ -123,21 +156,40 @@ $corsiLaurea = $db->getAllCdl();
                     <p>Nessun corso di laurea presente. Aggiungine uno!</p>
                 </div>
             <?php else: ?>
-                <?php foreach ($corsiLaurea as $corso): ?>
-                    <div class="card <?php echo ($editing && $editing['ID'] === $corso['ID']) ? 'editing' : ''; ?>">
-                        <h3><?php echo htmlspecialchars($corso['Nome']); ?></h3>
-                        <p>Campus: <?php echo htmlspecialchars($corso['Campus']); ?></p>
-                        <div class="card-buttons">
-                            <a href="?edit=<?php echo $corso['ID']; ?>">
-                                <button class="btn-edit" type="button">Modifica</button>
-                            </a>
-                            <form method="POST" style="display: inline;" onsubmit="return confirm('Sei sicuro di voler eliminare questo corso?');">
-                                <input type="hidden" name="azione" value="elimina">
-                                <input type="hidden" name="id" value="<?php echo $corso['ID']; ?>">
-                                <button class="btn-delete" type="submit">Elimina</button>
-                            </form>
+                <?php foreach ($corsiPerCampus as $campus => $corsi): ?>
+                    <h3>Campus: <?php echo htmlspecialchars($campus); ?></h3>
+                    <?php foreach ($corsi as $corso): ?>
+                        <div class="card <?php echo ($editing && $editing['idcdl'] === $corso['idcdl']) ? 'editing' : ''; ?>">
+                            <div class="card-info">
+                                <?php if (!empty($corso['img'])): ?>
+                                    <img src="<?php echo htmlspecialchars($corso['img']); ?>" 
+                                         alt="<?php echo htmlspecialchars($corso['nomecdl']); ?>" 
+                                         class="card-image"
+                                         onerror="this.style.display='none'">
+                                <?php endif; ?>
+                                
+                                <div class="card-text">
+                                    <h3><?php echo htmlspecialchars($corso['nomecdl']); ?></h3>
+                                    <p><strong>Campus:</strong> <?php echo htmlspecialchars($corso['sede']); ?></p>
+                                    <p><strong>Durata:</strong> <?php echo intval($corso['durata']); ?> anni</p>
+                                    <?php if (empty($corso['img'])): ?>
+                                        <p class="no-image">Nessuna immagine disponibile</p>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                            
+                            <div class="card-buttons">
+                                <a href="?edit=<?php echo $corso['idcdl']; ?>">
+                                    <button class="btn-edit" type="button">Modifica</button>
+                                </a>
+                                <form method="POST" style="display: inline;" onsubmit="return confirm('Sei sicuro di voler eliminare questo corso? Verranno eliminati anche tutti gli esami associati!');">
+                                    <input type="hidden" name="azione" value="elimina">
+                                    <input type="hidden" name="idcdl" value="<?php echo $corso['idcdl']; ?>">
+                                    <button class="btn-delete" type="submit">Elimina</button>
+                                </form>
+                            </div>
                         </div>
-                    </div>
+                    <?php endforeach; ?>
                 <?php endforeach; ?>
             <?php endif; ?>
         </div>
@@ -148,20 +200,40 @@ $corsiLaurea = $db->getAllCdl();
                 <form method="POST">
                     <input type="hidden" name="azione" value="<?php echo $editing ? 'modifica' : 'aggiungi'; ?>">
                     <?php if ($editing): ?>
-                        <input type="hidden" name="id" value="<?php echo $editing['ID']; ?>">
+                        <input type="hidden" name="idcdl" value="<?php echo $editing['idcdl']; ?>">
                     <?php endif; ?>
                     
-                    <label for="nome">Nome del Corso di Laurea</label>
-                    <input type="text" id="nome" name="nome" 
-                           placeholder="Inserisci nome CDL" 
-                           value="<?php echo $editing ? htmlspecialchars($editing['Nome']) : ''; ?>" 
+                    <label for="nomecdl">Nome del Corso di Laurea *</label>
+                    <input type="text" id="nomecdl" name="nomecdl" 
+                           placeholder="Es: Laurea in Ingegneria Informatica" 
+                           value="<?php echo $editing ? htmlspecialchars($editing['nomecdl']) : ''; ?>" 
                            required>
 
-                    <label for="campus">Campus</label>
-                    <input type="text" id="campus" name="campus" 
-                           placeholder="Inserisci campus" 
-                           value="<?php echo $editing ? htmlspecialchars($editing['Campus']) : ''; ?>" 
-                           required>
+                    <label for="sede">Campus *</label>
+                    <select id="sede" name="sede" required>
+                        <option value="">-- Seleziona Campus --</option>
+                        <option value="Cesena" <?php echo ($editing && $editing['sede'] === 'Cesena') ? 'selected' : ''; ?>>Cesena</option>
+                        <option value="Bologna" <?php echo ($editing && $editing['sede'] === 'Bologna') ? 'selected' : ''; ?>>Bologna</option>
+                        <option value="Forlì" <?php echo ($editing && $editing['sede'] === 'Forlì') ? 'selected' : ''; ?>>Forlì</option>
+                        <option value="Ravenna" <?php echo ($editing && $editing['sede'] === 'Ravenna') ? 'selected' : ''; ?>>Ravenna</option>
+                        <option value="Rimini" <?php echo ($editing && $editing['sede'] === 'Rimini') ? 'selected' : ''; ?>>Rimini</option>
+                    </select>
+
+                    <?php if (!$editing): ?>
+                        <label for="durata">Durata (anni) *</label>
+                        <select id="durata" name="durata" required>
+                            <option value="3">3 anni (Laurea Triennale)</option>
+                            <option value="2">2 anni (Laurea Magistrale)</option>
+                            <option value="5">5 anni (Laurea Magistrale a Ciclo Unico)</option>
+                        </select>
+
+                        <label for="img">Immagine (opzionale)</label>
+                        <input type="text" id="img" name="img" 
+                               placeholder="Nome file immagine (es: ingegneria.jpg)">
+                        <small style="color: #666; display: block; margin-top: 5px;">
+                            Inserisci il nome del file immagine che si trova nella cartella delle immagini
+                        </small>
+                    <?php endif; ?>
                     
                     <button class="<?php echo $editing ? 'btn-save' : 'btn-add'; ?>" type="submit">
                         <?php echo $editing ? 'Salva Modifiche' : 'Aggiungi Corso'; ?>

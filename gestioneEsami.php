@@ -13,13 +13,13 @@ $editing = null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     if (isset($_POST['azione']) && $_POST['azione'] === 'aggiungi') {
-        $nome = trim($_POST['nome'] ?? '');
-        $professore = trim($_POST['professore'] ?? '');
-        $anno = intval($_POST['anno'] ?? 0);
-        $cdl = intval($_POST['cdl'] ?? 0);
+        $nome = trim($_POST['nomeesame'] ?? '');
+        $anno = intval($_POST['annoesame'] ?? 0);
+        $cdl = intval($_POST['idcdl'] ?? 0);
+        $imgesame = trim($_POST['imgesame'] ?? '');
         
-        if (!empty($nome) && !empty($professore) && $anno > 0 && $cdl > 0) {
-            $result = $db->insertEsame($nome, $professore, $anno, $cdl);
+        if (!empty($nome) && $anno > 0 && $cdl > 0) {
+            $result = $db->insertEsame($nome, $anno, $cdl, $imgesame);
             if ($result) {
                 $messaggio = 'Esame aggiunto con successo!';
             } else {
@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     
     if (isset($_POST['azione']) && $_POST['azione'] === 'elimina') {
-        $id = intval($_POST['id'] ?? 0);
+        $id = intval($_POST['idesame'] ?? 0);
         if ($id > 0) {
             $result = $db->deleteEsame($id);
             if ($result) {
@@ -43,14 +43,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     
     if (isset($_POST['azione']) && $_POST['azione'] === 'modifica') {
-        $id = intval($_POST['id'] ?? 0);
-        $nome = trim($_POST['nome'] ?? '');
-        $professore = trim($_POST['professore'] ?? '');
-        $anno = intval($_POST['anno'] ?? 0);
-        $cdl = intval($_POST['cdl'] ?? 0);
+        $id = intval($_POST['idesame'] ?? 0);
+        $nome = trim($_POST['nomeesame'] ?? '');
+        $anno = intval($_POST['annoesame'] ?? 0);
+        $cdl = intval($_POST['idcdl'] ?? 0);
+        $imgesame = trim($_POST['imgesame'] ?? '');
         
-        if ($id > 0 && !empty($nome) && !empty($professore) && $anno > 0 && $cdl > 0) {
-            $result = $db->updateEsame($id, $nome, $professore, $anno, $cdl);
+        if ($id > 0 && !empty($nome) && $anno > 0 && $cdl > 0) {
+            $result = $db->updateEsame($id, $nome, $anno, $cdl, $imgesame);
             if ($result) {
                 $messaggio = 'Esame modificato con successo!';
             } else {
@@ -85,7 +85,7 @@ $esami = $db->getAllEsami();
 
 $esamiPerCdl = [];
 foreach ($esami as $esame) {
-    $idCdl = $esame['cdl'];
+    $idCdl = $esame['idcdl'];
     if (!isset($esamiPerCdl[$idCdl])) {
         $esamiPerCdl[$idCdl] = [];
     }
@@ -94,7 +94,7 @@ foreach ($esami as $esame) {
 
 $cdlMap = [];
 foreach ($corsiLaurea as $cdl) {
-    $cdlMap[$cdl['ID']] = $cdl;
+    $cdlMap[$cdl['idcdl']] = $cdl;
 }
 ?>
 <!DOCTYPE html>
@@ -143,20 +143,19 @@ foreach ($corsiLaurea as $cdl) {
                 </div>
             <?php else: ?>
                 <?php foreach ($corsiLaurea as $cdl): ?>
-                    <?php if (isset($esamiPerCdl[$cdl['ID']])): ?>
-                        <h3><?php echo htmlspecialchars($cdl['Nome']); ?></h3>
-                        <?php foreach ($esamiPerCdl[$cdl['ID']] as $esame): ?>
-                            <div class="card <?php echo ($editing && $editing['ID'] === $esame['ID']) ? 'editing' : ''; ?>">
-                                <h3><?php echo htmlspecialchars($esame['Nome']); ?></h3>
-                                <p><strong>Prof. </strong> <?php echo htmlspecialchars($esame['Professore']); ?></p>
-                                <p><strong>Anno:</strong> <?php echo intval($esame['Anno']); ?></p>
+                    <?php if (isset($esamiPerCdl[$cdl['idcdl']])): ?>
+                        <h3><?php echo htmlspecialchars($cdl['nomecdl']); ?></h3>
+                        <?php foreach ($esamiPerCdl[$cdl['idcdl']] as $esame): ?>
+                            <div class="card <?php echo ($editing && $editing['idesame'] === $esame['idesame']) ? 'editing' : ''; ?>">
+                                <h3><?php echo htmlspecialchars($esame['nomeesame']); ?></h3>
+                                <p><strong>Anno:</strong> <?php echo intval($esame['annoesame']); ?></p>
                                 <div class="card-buttons">
-                                    <a href="?edit=<?php echo $esame['ID']; ?>">
+                                    <a href="?edit=<?php echo $esame['idesame']; ?>">
                                         <button class="btn-edit" type="button">Modifica</button>
                                     </a>
                                     <form method="POST" style="display: inline;" onsubmit="return confirm('Sei sicuro di voler eliminare questo esame?');">
                                         <input type="hidden" name="azione" value="elimina">
-                                        <input type="hidden" name="id" value="<?php echo $esame['ID']; ?>">
+                                        <input type="hidden" name="idesame" value="<?php echo $esame['idesame']; ?>">
                                         <button class="btn-delete" type="submit">Elimina</button>
                                     </form>
                                 </div>
@@ -173,37 +172,41 @@ foreach ($corsiLaurea as $cdl) {
                 <form method="POST">
                     <input type="hidden" name="azione" value="<?php echo $editing ? 'modifica' : 'aggiungi'; ?>">
                     <?php if ($editing): ?>
-                        <input type="hidden" name="id" value="<?php echo $editing['ID']; ?>">
+                        <input type="hidden" name="idesame" value="<?php echo $editing['idesame']; ?>">
                     <?php endif; ?>
                     
-                    <label for="nome">Nome dell'Esame</label>
-                    <input type="text" id="nome" name="nome" 
+                    <label for="nomeesame">Nome dell'Esame</label>
+                    <input type="text" id="nomeesame" name="nomeesame" 
                            placeholder="Inserisci nome esame" 
-                           value="<?php echo $editing ? htmlspecialchars($editing['Nome']) : ''; ?>" 
+                           value="<?php echo $editing ? htmlspecialchars($editing['nomeesame']) : ''; ?>" 
                            required>
 
-                    <label for="professore">Prof.</label>
-                    <input type="text" id="professore" name="professore" 
-                           placeholder="Inserisci nome del professore" 
-                           value="<?php echo $editing ? htmlspecialchars($editing['Professore']) : ''; ?>" 
-                           required>
-
-                    <label for="anno">Anno di Corso</label>
-                    <input type="text" id="anno" name="anno" 
-                           placeholder="Inserisci l'anno in cui si svolge il corso" 
-                           value="<?php echo $editing ? htmlspecialchars($editing['Anno']) : ''; ?>" 
-                           required>
+                    <label for="annoesame">Anno di Corso</label>
+                    <select id="annoesame" name="annoesame" required>
+                        <option value="">-- Seleziona l'anno --</option>
+                        <?php for ($i = 1; $i <= 5; $i++): ?>
+                            <option value="<?php echo $i; ?>" 
+                                    <?php echo ($editing && $editing['annoesame'] == $i) ? 'selected' : ''; ?>>
+                                <?php echo $i; ?>° anno
+                            </option>
+                        <?php endfor; ?>
+                    </select>
                     
-                    <label for="cdl">Corso di Laurea</label>
-                    <select id="cdl" name="cdl" required>
+                    <label for="idcdl">Corso di Laurea</label>
+                    <select id="idcdl" name="idcdl" required>
                         <option value="">-- Seleziona un Corso di Laurea --</option>
                         <?php foreach ($corsiLaurea as $cdl): ?>
-                            <option value="<?php echo $cdl['ID']; ?>" 
-                                    <?php echo ($editing && $editing['cdl'] == $cdl['ID']) ? 'selected' : ''; ?>>
-                                <?php echo htmlspecialchars($cdl['Nome']); ?> - <?php echo htmlspecialchars($cdl['Campus']); ?>
+                            <option value="<?php echo $cdl['idcdl']; ?>" 
+                                    <?php echo ($editing && $editing['idcdl'] == $cdl['idcdl']) ? 'selected' : ''; ?>>
+                                <?php echo htmlspecialchars($cdl['nomecdl']); ?> - <?php echo htmlspecialchars($cdl['sede']); ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
+
+                    <label for="imgesame">Immagine (opzionale)</label>
+                    <input type="text" id="imgesame" name="imgesame" 
+                           placeholder="Nome file immagine (es: fisica.jpg)" 
+                           value="<?php echo $editing ? htmlspecialchars($editing['imgesame']) : ''; ?>">
                     
                     <button class="<?php echo $editing ? 'btn-save' : 'btn-add'; ?>" type="submit">
                         <?php echo $editing ? 'Salva Modifiche' : 'Aggiungi Esame'; ?>

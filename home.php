@@ -20,6 +20,15 @@ $cookieConsent = $_COOKIE['cookie_consent'] ?? null;
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="style.css"/>
     <title>StudyBo - Impara meglio, insieme</title>
+
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
 </head>
 <body>
     <!-- Cookie Consent Banner -->
@@ -38,6 +47,7 @@ $cookieConsent = $_COOKIE['cookie_consent'] ?? null;
         <div class="lang-switch">
             <a href="?lang=it">IT</a> |
             <a href="?lang=en">EN</a>
+            <button id="theme-toggle">🌙</button>
         </div>
         <button class="hamburger" type ="button"></button>
     </header>
@@ -93,15 +103,47 @@ $cookieConsent = $_COOKIE['cookie_consent'] ?? null;
       <h4><?= $translations['sottotitolo'] ?></h4>
       <p><?= $translations['diritti_riservati'] ?></p>
     </footer>
-    <script>
-    document.getElementById('accept-cookies')?.addEventListener('click', function () {
-        document.cookie = "cookie_consent=accepted; max-age=" + 60*60*24*365 + "; path=/";
-        document.getElementById('cookie-banner').style.display = 'none';
-    });
 
-    document.getElementById('reject-cookies')?.addEventListener('click', function () {
-        document.cookie = "cookie_consent=rejected; max-age=" + 60*60*24*365 + "; path=/";
-        document.getElementById('cookie-banner').style.display = 'none';
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const btn = document.getElementById("theme-toggle");
+        if (btn) {
+            const currentTheme = localStorage.getItem("theme");
+
+            if (currentTheme === "dark") {
+                document.documentElement.setAttribute("data-theme", "dark");
+                btn.textContent = "☀️";
+            }
+
+            btn.addEventListener("click", function() {
+                let theme = document.documentElement.getAttribute("data-theme");
+                
+                if (theme === "dark") {
+                    document.documentElement.removeAttribute("data-theme");
+                    localStorage.setItem("theme", "light");
+                    btn.textContent = "🌙";
+                } else {
+                    document.documentElement.setAttribute("data-theme", "dark");
+                    localStorage.setItem("theme", "dark");
+                    btn.textContent = "☀️";
+                }
+            });
+        }
+
+        const acceptBtn = document.getElementById('accept-cookies');
+        const rejectBtn = document.getElementById('reject-cookies');
+        const banner = document.getElementById('cookie-banner');
+
+        acceptBtn?.addEventListener('click', function () {
+            document.cookie = "cookie_consent=accepted; max-age=" + 60*60*24*365 + "; path=/";
+            if(banner) banner.style.display = 'none';
+        });
+
+        rejectBtn?.addEventListener('click', function () {
+            document.cookie = "cookie_consent=rejected; max-age=" + 60*60*24*365 + "; path=/";
+            if(banner) banner.style.display = 'none';
+        });
     });
     </script>
 
