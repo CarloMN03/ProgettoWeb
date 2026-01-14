@@ -16,16 +16,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $nome = trim($_POST['nomeesame'] ?? '');
         $anno = intval($_POST['annoesame'] ?? 0);
         $cdl = intval($_POST['idcdl'] ?? 0);
-        $imgesame = trim($_POST['imgesame'] ?? '');
+        $imgesame = '';
         
-        if (!empty($nome) && $anno > 0 && $cdl > 0) {
+        // Gestione upload immagine
+        if (isset($_FILES['imgesame']) && $_FILES['imgesame']['error'] !== UPLOAD_ERR_NO_FILE) {
+            if ($_FILES['imgesame']['error'] === UPLOAD_ERR_OK) {
+                $uploadPath = 'img/esami/';
+                
+                // Crea la cartella se non esiste
+                if (!file_exists($uploadPath)) {
+                    mkdir($uploadPath, 0777, true);
+                }
+                
+                $uploadResult = $db->uploadImage($uploadPath, $_FILES['imgesame']);
+                
+                if ($uploadResult[0] === 1) {
+                    $imgesame = $uploadResult[1];
+                } else {
+                    $errore = 'Errore caricamento immagine: ' . $uploadResult[1];
+                }
+            } else {
+                $errore = 'Errore durante il caricamento del file.';
+            }
+        }
+        
+        if (empty($errore) && !empty($nome) && $anno > 0 && $cdl > 0) {
             $result = $db->insertEsame($nome, $anno, $cdl, $imgesame);
             if ($result) {
                 $messaggio = 'Esame aggiunto con successo!';
             } else {
                 $errore = 'Errore durante l\'aggiunta dell\'esame.';
             }
-        } else {
+        } else if (empty($errore)) {
             $errore = 'Compila tutti i campi per aggiungere un esame.';
         }
     }
@@ -47,16 +69,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $nome = trim($_POST['nomeesame'] ?? '');
         $anno = intval($_POST['annoesame'] ?? 0);
         $cdl = intval($_POST['idcdl'] ?? 0);
-        $imgesame = trim($_POST['imgesame'] ?? '');
         
-        if ($id > 0 && !empty($nome) && $anno > 0 && $cdl > 0) {
+        // Recupera l'immagine esistente
+        $esameCorrente = $db->getEsameById($id);
+        $imgesame = $esameCorrente[0]['imgesame'] ?? '';
+        
+        // Gestione upload nuova immagine
+        if (isset($_FILES['imgesame']) && $_FILES['imgesame']['error'] !== UPLOAD_ERR_NO_FILE) {
+            if ($_FILES['imgesame']['error'] === UPLOAD_ERR_OK) {
+                $uploadPath = 'img/esami/';
+                
+                if (!file_exists($uploadPath)) {
+                    mkdir($uploadPath, 0777, true);
+                }
+                
+                $uploadResult = $db->uploadImage($uploadPath, $_FILES['imgesame']);
+                
+                if ($uploadResult[0] === 1) {
+                    // Elimina la vecchia immagine se esiste
+                    if (!empty($imgesame) && file_exists($uploadPath . $imgesame)) {
+                        unlink($uploadPath . $imgesame);
+                    }
+                    $imgesame = $uploadResult[1];
+                } else {
+                    $errore = 'Errore caricamento immagine: ' . $uploadResult[1];
+                }
+            }
+        }
+        
+        if (empty($errore) && $id > 0 && !empty($nome) && $anno > 0 && $cdl > 0) {
             $result = $db->updateEsame($id, $nome, $anno, $cdl, $imgesame);
             if ($result) {
                 $messaggio = 'Esame modificato con successo!';
             } else {
                 $errore = 'Errore durante la modifica dell\'esame.';
             }
-        } else {
+        } else if (empty($errore)) {
             $errore = 'Errore durante la modifica dell\'esame.';
         }
     }
@@ -112,7 +160,19 @@ foreach ($corsiLaurea as $cdl) {
     <img src="logo.libro.png.PNG" alt="logo studybo libro" width="100" height="100"/>
     <h1>StudyBo</h1>
     <button class="lang-switch" type="button">IT</button>
-    <button class="hamburger" type="button">☰</button>
+    <div class="hamburger-menu">
+        <button class="hamburger" type="button" id="hamburgerBtn">☰</button>
+        <div class="dropdown-menu" id="dropdownMenu">
+            <button type="button">Admin</button>
+            <div class="separator"></div>
+            <a href="gestioneCDL.php">Gestione CDL</a>
+            <a href="gestioneEsami.php">Gestione Esami</a>
+            <a href="gestioneStudyGroup.php">Gestione Study Group</a>
+            <a href="gestioneUtenti.php">Gestione Utenti</a>
+            <div class="separator"></div>
+            <button type="button">Log Out</button>
+        </div>
+    </div>
 </header>
 
 <main class="page">
@@ -147,6 +207,12 @@ foreach ($corsiLaurea as $cdl) {
                         <h3><?php echo htmlspecialchars($cdl['nomecdl']); ?></h3>
                         <?php foreach ($esamiPerCdl[$cdl['idcdl']] as $esame): ?>
                             <div class="card <?php echo ($editing && $editing['idesame'] === $esame['idesame']) ? 'editing' : ''; ?>">
+                                <?php if (!empty($esame['imgesame'])): ?>
+                                    <div class="card-img">
+                                        <img src="img/esami/<?php echo htmlspecialchars($esame['imgesame']); ?>" 
+                                             alt="<?php echo htmlspecialchars($esame['nomeesame']); ?>">
+                                    </div>
+                                <?php endif; ?>
                                 <h3><?php echo htmlspecialchars($esame['nomeesame']); ?></h3>
                                 <p><strong>Anno:</strong> <?php echo intval($esame['annoesame']); ?></p>
                                 <div class="card-buttons">
@@ -169,7 +235,7 @@ foreach ($corsiLaurea as $cdl) {
         <aside class="card-add">
             <h2><?php echo $editing ? 'Modifica Esame' : 'Aggiungi nuovo Esame'; ?></h2>
             <div class="card">
-                <form method="POST">
+                <form method="POST" enctype="multipart/form-data">
                     <input type="hidden" name="azione" value="<?php echo $editing ? 'modifica' : 'aggiungi'; ?>">
                     <?php if ($editing): ?>
                         <input type="hidden" name="idesame" value="<?php echo $editing['idesame']; ?>">
@@ -204,9 +270,18 @@ foreach ($corsiLaurea as $cdl) {
                     </select>
 
                     <label for="imgesame">Immagine (opzionale)</label>
-                    <input type="text" id="imgesame" name="imgesame" 
-                           placeholder="Nome file immagine (es: fisica.jpg)" 
-                           value="<?php echo $editing ? htmlspecialchars($editing['imgesame']) : ''; ?>">
+                    <?php if ($editing && !empty($editing['imgesame'])): ?>
+                        <div style="margin-bottom: 10px;">
+                            <img src="img/esami/<?php echo htmlspecialchars($editing['imgesame']); ?>" 
+                                 alt="Immagine corrente" 
+                                 style="max-width: 200px; max-height: 150px; border-radius: 8px;">
+                            <p style="font-size: 0.9em; color: var(--text-secondary);">Immagine corrente: <?php echo htmlspecialchars($editing['imgesame']); ?></p>
+                        </div>
+                    <?php endif; ?>
+                    <input type="file" id="imgesame" name="imgesame" accept="image/jpeg,image/png,image/gif,image/jpg">
+                    <p style="font-size: 0.85em; color: var(--text-secondary); margin-top: 5px;">
+                        Formati accettati: JPG, JPEG, PNG, GIF (max 500KB)
+                    </p>
                     
                     <button class="<?php echo $editing ? 'btn-save' : 'btn-add'; ?>" type="submit">
                         <?php echo $editing ? 'Salva Modifiche' : 'Aggiungi Esame'; ?>
@@ -228,6 +303,22 @@ foreach ($corsiLaurea as $cdl) {
     <h4>Impara meglio, insieme</h4>
     <p>Tutti i diritti riservati, 2025</p>
 </footer>
-
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+        
+        hamburgerBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            dropdownMenu.classList.toggle('show');
+        });
+        
+        document.addEventListener('click', function(e) {
+            if (!hamburgerBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                dropdownMenu.classList.remove('show');
+            }
+        });
+    });
+</script>
 </body>
 </html>

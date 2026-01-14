@@ -90,10 +90,6 @@ header .lang-switch {
     background: rgba(255,255,255,0.2);
 }
 
-header .hamburger {
-    margin-left: 5%;
-}
-
 .img-destra {
     text-align: right;
 }
@@ -274,3 +270,49 @@ div.img-destra img{
     color: white;
 }
 
+.hamburger-menu {
+    position: relative;
+    display: inline-block;
+}
+        
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background-color: white;
+    min-width: 200px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    margin-top: 5px;
+    z-index: 1000;
+}
+        
+.dropdown-menu.show {
+    display: block;
+}
+        
+.dropdown-menu a,
+.dropdown-menu button {
+    display: block;
+    width: 100%;
+    padding: 12px 20px;
+    text-align: left;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: #333;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+        
+.dropdown-menu a:hover,
+.dropdown-menu button:hover {
+    background-color: #f0f0f0;
+}
+        
+.dropdown-menu .separator {
+    height: 1px;
+    background-color: #e0e0e0;
+    margin: 5px 0;
+}

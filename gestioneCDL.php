@@ -126,7 +126,19 @@ foreach ($corsiLaurea as $corso) {
     <img src="logo.libro.png.PNG" alt="logo studybo libro" width="100" height="100"/>
     <h1>StudyBo</h1>
     <button class="lang-switch" type="button">IT</button>
-    <button class="hamburger" type="button">☰</button>
+    <div class="hamburger-menu">
+        <button class="hamburger" type="button" id="hamburgerBtn">☰</button>
+        <div class="dropdown-menu" id="dropdownMenu">
+            <button type="button">Admin</button>
+            <div class="separator"></div>
+            <a href="gestioneCDL.php">Gestione CDL</a>
+            <a href="gestioneEsami.php">Gestione Esami</a>
+            <a href="gestioneStudyGroup.php">Gestione Study Group</a>
+            <a href="gestioneUtenti.php">Gestione Utenti</a>
+            <div class="separator"></div>
+            <button type="button">Log Out</button>
+        </div>
+    </div>
 </header>
 
 <main class="page">
@@ -255,6 +267,22 @@ foreach ($corsiLaurea as $corso) {
     <h4>Impara meglio, insieme</h4>
     <p>Tutti i diritti riservati, 2025</p>
 </footer>
-
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+        
+        hamburgerBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            dropdownMenu.classList.toggle('show');
+        });
+        
+        document.addEventListener('click', function(e) {
+            if (!hamburgerBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                dropdownMenu.classList.remove('show');
+            }
+        });
+    });
+</script>
 </body>
 </html>
