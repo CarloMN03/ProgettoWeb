@@ -2,22 +2,21 @@
 require_once 'bootstrap.php';
 
 //da eliminare quando viene fatta la pagina login
-$_SESSION["username"] = "lucia.rossi";
+$_SESSION["username"] = "marco.zero";
 
-if(isset($_GET["logout"])){
+if(isset($_GET["logout"])) {
     session_unset();
     $templateParams["nome"] = "profilo-ko.php";
-} else if(isset($_SESSION["username"])){
-    
-    if(isset($_SESSION["username"]) && isset($_POST["oldPwd"])){
+} else if(isset($_SESSION["username"])) {
+    if(isset($_SESSION["username"]) && isset($_POST["oldPwd"])) {
         $login_result = $dbh->checkPwd($_SESSION["username"], $_POST["oldPwd"]);
         if(count($login_result)==0){
             $templateParams["errorepassword"] = "Password errata!";
         }
         else{
-            if(isset($_POST["newPwd"]) && isset($_POST["reNewPwd"])){
+            if(isset($_POST["newPwd"]) && isset($_POST["reNewPwd"])) {
                 $changepwd_result = $dbh->changePwd($_SESSION["username"], $_POST["newPwd"]);
-            $templateParams["errorepassword"] = $changepwd_result;
+                $templateParams["errorepassword"] = $changepwd_result;
             };
         }
     }
@@ -66,10 +65,21 @@ if(isset($_GET["logout"])){
         $templateParams["ritorno-modifica-preferenza"] = $dbh->updatePreferenza($_POST["idcdl"], $_POST["idesame"], $_POST["idpreferenza"], $_SESSION["username"], $_POST["luogo"], $_POST["ora-da"], $_POST["ora-a"], $_POST["idlingua"]);
     }
 
-    $templateParams["nome"] = "profilo.php";
+    if(isset($_POST["submit-pref"])){
+        $templateParams["cdluser"] = $dbh->getNameUser($_SESSION["username"])[0]["idcdl"];
+        $templateParams["maxidpreferenza"] = $dbh->getLastIdPreferenza($templateParams["cdluser"], $_POST["idesame"], $_SESSION["username"])[0]["lastpref"] + 1;
+        if(empty($templateParams["maxidpreferenza"])){
+            $templateParams["maxidpreferenza"] = 1;
+        }
+        $templateParams["ritorno-aggiungi-preferenza"] = $dbh->addPreferenza($_SESSION["username"], $templateParams["cdluser"], $_POST["idesame"], $templateParams["maxidpreferenza"],  $_POST["luogo"], $_POST["ora-da"], $_POST["ora-a"], $_POST["idlingua"]);
+    }
+
+    $templateParams["nome"] = "area-personale.php";
     $templateParams["nomeuser"] = $dbh->getNameUser($_SESSION["username"])[0]["nome"];
     $templateParams["cognomeuser"] = $dbh->getNameUser($_SESSION["username"])[0]["cognome"];
+    $templateParams["imguser"] = $dbh->getUser($_SESSION["username"])[0]["imguser"];
     $templateParams["cdl"] = $dbh->getCdl();
+    $templateParams["esame"] = $dbh->getEsamiByIdCdl($dbh->getNameUser($_SESSION["username"])[0]["idcdl"]);
     $templateParams["studygroupiscritto"] = $dbh->getStGrUtente($_SESSION["username"]);
     $templateParams["preferenza"] = $dbh->getPreferenzaUser($_SESSION["username"]);
 
@@ -88,5 +98,4 @@ if(isset($_SESSION["username"])){
 }
 
 require 'template/base.php';
-;
 ?>

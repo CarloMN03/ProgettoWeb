@@ -1,9 +1,9 @@
 <h2>Corsi di Laurea con Study Group attivi</h2>
         <section class="el-cdl">
             <?php foreach($templateParams["cdl"] as $cdl) : ?>
-                <div id="card-cdl">
-                    <div id="card-img"><img src="<?php echo UPLOAD_DIR . $cdl["img"]; ?>" alt=""></div>
-                    <div id="card-text">
+                <div class="card-cdl">
+                    <div class="card-img"><img src="<?php echo UPLOAD_DIR . $cdl["img"]; ?>" alt=""></div>
+                    <div class="card-text">
                         <h3><?php echo $cdl["nomecdl"]; ?></h3>
                         <ul>
                             <li>Campus: <?php echo $cdl["sede"]; ?></li>
@@ -17,11 +17,22 @@
                         </ul>
                     </div>
                 </div>
-                <div id="study-gr-anno">
+                <div class="study-gr-anno">
                     <h3>Esami con Study Group attivi</h3>
                     <ul>
                         <?php for($i = 1; $i <= $cdl["durata"]; $i++) : ?>
-                            <li><?php echo $i; ?> anno</li>
+                            <li><?php switch($i){
+                                case 1: echo "Primo";
+                                break;
+                                case 2: echo "Secondo";
+                                break;
+                                case 3: echo "Terzo";
+                                break;
+                                case 4: echo "Quarto";
+                                break;
+                                case 5: echo "Quinto";
+                                break;
+                            } $i; ?> Anno</li>
                             <div class="el-esami" id="<?php echo $i . $cdl["idcdl"]; ?>">
                             <?php foreach($templateParams["esami"] as $esame) : ?>
                                 <?php if($esame["idcdl"] == $cdl["idcdl"] && $esame["annoesame"] == $i): ?>
@@ -34,8 +45,8 @@
                                 <?php endif; ?>
                             <?php endforeach; ?>
                             </div>
-                            <li><input type="button" id="close<?php echo $i . $cdl["idcdl"]; ?>" value="ʌ" onclick="closeForm('close<?php echo $i . $cdl['idcdl']; ?>', '<?php echo $i . $cdl['idcdl'] ;?>', 'open<?php echo $i . $cdl['idcdl']; ?>')"></li>
-                            <li><input type="button" id="open<?php echo $i . $cdl["idcdl"]; ?>" value="v" onclick="openForm('close<?php echo $i . $cdl['idcdl']; ?>', '<?php echo $i . $cdl['idcdl']; ?>', 'open<?php echo $i . $cdl['idcdl']; ?>')"></li>
+                            <li><button id="close<?php echo $i . $cdl["idcdl"]; ?>" value="ʌ" onclick="closeForm('close<?php echo $i . $cdl['idcdl']; ?>', '<?php echo $i . $cdl['idcdl'] ;?>', 'open<?php echo $i . $cdl['idcdl']; ?>')"><img src="<?php echo UPLOAD_DIR; ?>angle_up.png" alt="riduci"/></button></li>
+                            <li><button id="open<?php echo $i . $cdl["idcdl"]; ?>" value="v" onclick="openForm('close<?php echo $i . $cdl['idcdl']; ?>', '<?php echo $i . $cdl['idcdl']; ?>', 'open<?php echo $i . $cdl['idcdl']; ?>')"><img src="<?php echo UPLOAD_DIR; ?>angle_down.png" alt="espandi"/></button></li>
                         <?php endfor; ?>
                     </ul>
                 </div>

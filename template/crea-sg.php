@@ -30,9 +30,9 @@
                 <label for="lingua">Lingua: </label><select name="lingua" id="lingua">
                     <option value=""></option>
                     <?php foreach($templateParams["lingua"] as $lingua): ?>
-                                <option value="<?php echo $lingua["idlingua"]; ?>"><?php echo $lingua["descrizionelingua"]; ?></option>
-                                <?php endforeach; ?>
-                            </select>
+                        <option value="<?php echo $lingua["idlingua"]; ?>"><?php echo $lingua["descrizionelingua"]; ?></option>
+                    <?php endforeach; ?>
+                </select>
             </li>
             <li>
                 <input type="submit" value="Invia"/>

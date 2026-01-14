@@ -4,7 +4,7 @@ function generaMessaggi(messaggi){
     <h2>Study Group di ${messaggi["studygroup"][0]["nomeesame"]} - Messaggi</h2>
     <nav id="nav-sg">
         <ul>
-            <li><a href="studygroup.php?idcdl=${messaggi['idcdl']}&idesame=${messaggi['idesame']}&idstudygroup=${messaggi['idstudygroup']}">Gestione</a></li><li><a href="risorsesg.php?idcdl=${messaggi["idcdl"]}&idesame=${messaggi["idesame"]}&idstudygroup=${messaggi["idstudygroup"]}">Risorse</a></li><li><a href="bacheca2.php?idcdl=idcdl=${messaggi["idcdl"]}&idesame=${messaggi["idesame"]}&idstudygroup=${messaggi["idstudygroup"]}">Messaggi</a></li>
+            <li><a href="studygroup.php?idcdl=${messaggi['idcdl']}&idesame=${messaggi['idesame']}&idstudygroup=${messaggi['idstudygroup']}">Gestione</a></li><li><a href="risorsesg.php?idcdl=${messaggi["idcdl"]}&idesame=${messaggi["idesame"]}&idstudygroup=${messaggi["idstudygroup"]}">Risorse</a></li><li><a href="bacheca2.php?idcdl=${messaggi["idcdl"]}&idesame=${messaggi["idesame"]}&idstudygroup=${messaggi["idstudygroup"]}">Messaggi</a></li>
         </ul>
     </nav>
     <div class="struttura-msg">
@@ -17,9 +17,9 @@ function generaMessaggi(messaggi){
                     <div class="el-msg">
                         <div class="img-msg">
                 `
-                if(messaggi["lista"][i]["imguser"] == "") {
+                if(messaggi["lista"][i]["imguser"] == messaggi["upload"]) {
                     list += `
-                        <p>${messaggi["lista"][i]["nome"].substring(1, 1).toUpperCase()}${messaggi["lista"][i]["cognome"].substring(1, 1).toUpperCase()}</p>
+                        <p>${messaggi["lista"][i]["nome"].substring(0, 1).toUpperCase()}${messaggi["lista"][i]["cognome"].substring(0, 1).toUpperCase()}</p>
                         `   
                 } else {
                     list += `
@@ -62,9 +62,9 @@ function generaForm(messaggi){
             <form id="crea-msg" action="" method="POST">
                 <div class="img-msg">
                 ` 
-                if(messaggi["user"][0]["imguser"] == ""){
+                if(messaggi["user"][0]["imguser"] == messaggi["upload"]){
                     form += `
-                    <p>${messaggi["user"][0]["nome"].substring(1, 1).toUpperCase()}${messaggi["user"][0]["cognome"].substring(1, 1).toUpperCase()}</p>
+                    <p>${messaggi["user"][0]["nome"].substring(0, 1).toUpperCase()}${messaggi["user"][0]["cognome"].substring(0, 1).toUpperCase()}</p>
                     `
                 } else {
                     form += `

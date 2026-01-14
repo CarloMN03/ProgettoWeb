@@ -1,8 +1,8 @@
         <section class="esame">
             <h2><?php echo $templateParams["cdlesame"][0]["nomecdl"]; ?></h2>
-            <div id="card-esame">
-                <div id="card-img"><img src="<?php echo UPLOAD_DIR . $templateParams["esame"][0]["imgesame"]; ?>" alt=""></div>
-                <div id="card-text">
+            <div class="card-esame">
+                <div class="card-img"><img src="<?php echo UPLOAD_DIR . $templateParams["esame"][0]["imgesame"]; ?>" alt=""></div>
+                <div class="card-text">
                     <h3><?php echo $templateParams["esame"][0]["nomeesame"]; ?></h3>
                     <ul>
                         <li>Campus: <?php echo $templateParams["cdlesame"][0]["sede"]; ?></li>
@@ -15,14 +15,14 @@
                     </div>
                 </div>    
             </div>   
-            <div id="study-gr-corso">
+            <div class="study-gr-corso">
                 <h3>Elenco Study Group attivi sul corso</h3>
                 <?php foreach($templateParams["studygrattivi"] as $studygr): ?>
                  <a href="studygroup.php?idcdl=<?php echo($_GET["idcdl"]); ?>&idesame=<?php echo($_GET["idesame"]); ?>&idstudygroup=<?php echo($studygr["idstudygroup"]); ?>">   
-                <div id="card-study-gr">
-                    <div id="card-stGr-img"><img src="<?php echo UPLOAD_DIR . $templateParams["esame"][0]["imgesame"]; ?>" alt=""/>
+                <div class="card-study-gr">
+                    <div class="card-stGr-img"><img src="<?php echo UPLOAD_DIR . $templateParams["esame"][0]["imgesame"]; ?>" alt=""/>
                     </div>
-                    <div id="card-stGr-text">
+                    <div class="card-stGr-text">
                         <h4><?php echo $templateParams["esame"][0]["nomeesame"]; ?></h4>
                         <ul>
                             <li>Tema: <?php echo $studygr["tema"]; ?></li>
@@ -33,9 +33,9 @@
                                 echo $lingua["descrizionelingua"];
                             }?><?php endforeach; ?></li>
                         </ul>
-                        <div id="part-stGr">
-                            <img src="./upload/cuore.png" alt="">
-                            <div id="conta-part"><?php $p = 0; if(!empty($templateParams["partecipanti"])){
+                        <div class="part-stGr">
+                            <img src="./upload/cuore.png" alt=""/>
+                            <div class="conta-part"><?php $p = 0; if(!empty($templateParams["partecipanti"])){
                                 foreach($templateParams["partecipanti"] as $partecipante) : ?><?php if($partecipante["idstudygroup"] == $studygr["idstudygroup"]){
                                 $p++;
                             }; ?>
@@ -46,10 +46,10 @@
                 </div></a>
                 <?php endforeach; ?>
                 <a href="crea-sg.php?idcdl=<?php echo $_GET["idcdl"]; ?>&idesame=<?php echo $_GET["idesame"]; ?>">
-                    <div id="card-study-gr">
-                        <div id="card-stGr-img"><img src="./upload/plus.png" alt=""/>
+                    <div class="card-study-gr">
+                        <div class="card-stGr-img"><img src="./upload/plus.png" alt=""/>
                         </div>
-                        <div id="card-stGr-text">
+                        <div class="card-stGr-text">
                             <h4>Crea nuovo Study Group</h4>
                         </div>
                     </div>

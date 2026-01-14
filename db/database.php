@@ -590,5 +590,16 @@
                 return "Rimozione risorsa fallita: " . $this->db->error;
             };
         }
+
+        public function getEsamiByIdCdl($cdl){
+            $query = "SELECT * FROM esame WHERE idcdl = ?";
+            $stmt = $this->db->prepare($query);
+            $stmt->bind_param('i', $cdl);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            return $result->fetch_all(MYSQLI_ASSOC);
+        }
     }
+    
 ?>

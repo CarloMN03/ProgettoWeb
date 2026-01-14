@@ -20,6 +20,7 @@ $messaggi["user"] = $templateParams["user"] = $dbh->getUser($_SESSION["username"
 $messaggi["idcdl"] = $_SESSION["idcdl"];
 $messaggi["idesame"] = $_SESSION["idesame"];
 $messaggi["idstudygroup"] = $_SESSION["idstudygroup"];
+$messaggi["upload"] = UPLOAD_DIR;
 
 header('Content-Type: application/json');
 echo json_encode($messaggi);

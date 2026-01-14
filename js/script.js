@@ -20,7 +20,7 @@ function openMenu(ʌ, form, v, utente, nome){
         case 0:
             menu =`
             <ul>
-                <li>Ciao ${nome}
+                <li>Ciao ${nome.substr(0, 1).toUpperCase()}${nome.substr(1)}
                 <li><a href="profilo.php">Area personale</a></li>
                 <li><a href="#">Home Page</a></li>
                 <li><a href="elenco-cdl.php">Corsi di Laurea</a></li>
@@ -34,7 +34,7 @@ function openMenu(ʌ, form, v, utente, nome){
         case 1:
             menu =`
             <ul>
-                <li>Ciao ${nome}
+                <li>Ciao ${nome.substr(0, 1).toUpperCase()}${nome.substr(1)}
                 <li><a href="#">Home Page</a></li>
                 <li><a href="#">Gestione CDL</a></li>
                 <li><a href="#">Gestione Esami</a></li>
@@ -180,3 +180,32 @@ function addFormModifica(cdl, esame, pref, daora, aora){
     document.querySelector(".form-mod-pref").innerHTML = formPref;
     document.querySelector(".prefdesc").style.display = "none";
 }
+
+function controlPwd(){
+    const password1 = document.querySelector("#newPwd").value;
+    const password2 = document.querySelector("#reNewPwd").value;
+
+    if(password1 != password2){
+        messaggiopwd = `
+        Attenzione! Password differente da quella digitata prima.
+    `;
+    } else {
+        messaggiopwd = `
+    `;
+    }
+
+    document.querySelector("#chgpwd ul li p").innerHTML = messaggiopwd;
+}
+
+function openEye(inputid, imgid){
+    const occhio = document.querySelector("#" + imgid).src.split('/').reverse()[0];
+    if(occhio == "occhiochiuso.png") {
+        document.getElementById(imgid).src = "upload/occhioaperto.png";
+        document.getElementById(inputid).type = "text";
+    } else {
+        document.getElementById(imgid).src = "upload/occhiochiuso.png";
+        document.getElementById(inputid).type = "password";
+    }
+    
+    
+};

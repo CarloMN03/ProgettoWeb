@@ -56,7 +56,7 @@
     endif;
     ?>
     <footer>
-      <h4>Imapara meglio, insieme</h4>
+      <h4>Impara meglio, insieme</h4>
       <p>Tutti diritti riservati, 2025</p>
     </footer>
 </body>

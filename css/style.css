@@ -85,6 +85,16 @@ section.gest-utente, section.iscr-sg, section.el-cdl, section.esame, section.con
     margin: 0 1% 0 1%;
 }
 
+.gest-utente div.intestazione-user{
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+}
+
+.intestazione-user h2{
+    text-align: left;
+}
+
 section.gest-utente h3, section.iscr-sg h3{
     text-align: center;
 }
@@ -155,7 +165,7 @@ form ul li:last-child, section.gest-utente div ul li:last-child{
 
 form ul li label{
     display: inline-block;
-    width: 50%;
+    width: 40%;
     text-align: left;
     cursor: pointer;
 }
@@ -172,9 +182,18 @@ form ul li input[type="submit"]{
     color: #ffffff;
 }
 
-input[type="button"]{
+.guardapwd{
+    margin-left: 5px;
+}
+
+.gest-utente div>button, .study-gr-anno li>button{
     border-width: 0;
     width: 100%;
+}
+
+button img{
+    width: 15px;
+    height: 15px;
 }
 
 div.sgcard div, .prefcard div{
@@ -186,19 +205,11 @@ div.sgimg img, .prefimg img{
     height: 200px;
 }
 
-div.sginvito{
-    width: 10%;
-    display: inline-block;
-    vertical-align: bottom;
-}
-
-div.sginvito p, div.sgcal p, div.sgaccedi p, div.sgdisiscrivi p{
-    text-align: right;
-}
-
-input[value="ʌ"], form#chgpwd, #chgcdl, #chgana, #delacc, #x, #nav-principale, #elenco-preferenze{
+button[value="ʌ"], form#chgpwd, #chgcdl, #chgana, #delacc, #x, #nav-principale, #elenco-preferenze{
     display: none;
 }
+
+/* menu principale */
 
 #nav-principale{
     position: absolute;
@@ -232,7 +243,7 @@ nav ul li{
     text-decoration: underline;
 }
 
-input[type="button"]{
+.study-gr-anno ul li button, .gest-utente div>button{
     cursor: pointer;
 }
 
@@ -249,55 +260,55 @@ div ul li a{
     color: black;
 }
 
-div#card-cdl, #card-esame {
+.card-cdl, .card-esame {
     display: flex;
     background-color: #f2f2f2;
     padding: 20px 2% 20px 2%;
     align-items: center;
 }
 
-div#card-img{
+.card-img{
     display: flex;
 }
 
-div#study-gr-anno ul{
+.study-gr-anno ul{
     background-color:#ffffff;
 }
 
-div#study-gr-anno ul li{
+div.study-gr-anno ul li{
     text-align: center;
     font-weight: bold;
     margin: 5px 0 5px 0;
-    padding: 10px 0 5px 0;
+    padding: 10px 0 0 0;
     vertical-align: center;
 }
 
-#card-img img, #card-stGr-img img, #study-gr-anno ul div img{
+.card-stGr-img img, .study-gr-anno ul div img, .card-img img{
     max-width: 130px;
     max-height: 130px;
 }
 
-div#card-cdl div#card-text, #card-esame div#card-text{
+.card-text{
     padding-left: 20px;
     width: 100%;
 }
 
-#card-text li button, #button-sg form input {
+.card-text li button, .button-sg form input, .card-text li button {
     margin: 10px 0 0 0;
     padding: 3px;
 }
 
-#study-gr-corso h3, #study-gr-anno h3{
+.study-gr-corso h3, .study-gr-anno h3{
     text-align: center;
 }
 
-#study-gr-corso, #study-gr-anno{
+.study-gr-corso, .study-gr-anno{
     background-color: #f2f2f2;
     padding: 20px 2% 20px 2%;
     margin: 5px 0 5px 0;
 }
 
-#card-study-gr{
+.card-study-gr{
     background-color: #ffffff;
     display: inline-block;
     vertical-align: top;
@@ -310,7 +321,7 @@ div#card-cdl div#card-text, #card-esame div#card-text{
     color: #000000;
 }
 
-#study-gr-anno ul>div{
+.study-gr-anno ul>div{
     background-color:#ffffff;
 }
 
@@ -330,7 +341,7 @@ div#card-cdl div#card-text, #card-esame div#card-text{
     border: 3px solid #f2f2f2
 }
 
-.card-esami:hover, #card-study-gr:hover{
+.card-esami:hover, .card-study-gr:hover{
     border: 3px solid #bb2e29;
 }
 
@@ -338,7 +349,7 @@ div#card-cdl div#card-text, #card-esame div#card-text{
     display: none;
 }
 
-#card-stGr-img, #add-stGr{
+.card-stGr-img, #add-stGr{
     display: flex;
     justify-content: center;
 }
@@ -348,23 +359,23 @@ div#card-cdl div#card-text, #card-esame div#card-text{
     justify-content: center;
 }
 
-div#study-gr-anno ul div h2{
+div.study-gr-anno ul div h2{
     text-align: center;
 }
 
-#part-stGr{
+.part-stGr{
     position: relative;
     float: right;
 }
 
-#part-stGr img{
+.part-stGr img{
     display: block;
     z-index: 0;
     width: 50px;
     height: 50px;
 }
 
-#conta-part{
+.conta-part{
     position: absolute;
     top: 36%;
     left: 50%;
@@ -373,9 +384,11 @@ div#study-gr-anno ul div h2{
     font-size: 13px;
 }
 
-#add-stGr{
+.add-stGr{
     margin: 70px 0 40px 0;
 }
+
+/* Contatti */
 
 table{
     border-spacing: 0;
@@ -386,14 +399,39 @@ table{
 
 table th, table td{
     border: 1px solid #000;
-    padding: 5px 0;
+    padding: 5px 2px 5px 2px;
 }
 
 table tr{
     text-align: center;
 }
 
-#partecipanti form input{
+
+
+#nav-principale ul li a:hover, div ul li a:hover, #nav-sg ul li a:hover{
+    text-decoration: underline;
+}
+
+.card-text ul li form{
+    display: inline-block;
+}
+
+/*studygroup*/
+
+.sg, .msg, .risorse-sg{
+    padding: 0 2% 0 2%;
+}
+
+#sg-anag{
+    display: none;
+}
+
+.button-sg ul li{
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.partecipanti form input{
     display: none;
 }
 
@@ -425,29 +463,6 @@ table tr{
     padding: 10px 0 10px 0;
 }
 
-#nav-principale ul li a:hover, div ul li a:hover, #nav-sg ul li a:hover{
-    text-decoration: underline;
-}
-
-.sg, .msg, .risorse-sg{
-    padding: 0 2% 0 2%;
-}
-
-#card-text ul li form{
-    display: inline-block;
-}
-
-#sg-anag{
-    display: none;
-}
-
-.button ul li{
-    display: inline-block;
-    margin-right: 10px;
-}
-
-/*studygroupsg*/
-
 #nav-sg ul{
     margin: 16px 0 0 0;
 }
@@ -460,16 +475,33 @@ table tr{
     border: 1px solid #dddddd;
 }
 
-.elenco-partecipanti h3, .risorse-sg h3, .struttura-msg h3, .nuovo-msg h3, #newsg h3{
+.elenco-partecipanti h3, .risorse-sg h3, .struttura-msg h3, .nuovo-msg h3, #newsg h3, .risorse-sg h4, .elenco-ris h4{
     text-align: center;
 }
-/*messaggi*/
 
-ul{
-    list-style: none;
+.card-partecipanti ul{
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid black;
+    border-radius: 10px;
+    align-items: center;
+    padding: 0 20px 0 20px;
+    margin: 15px;
+    background-color: #ffffff;
 }
 
-.card-partecipanti ul li:first-of-type, .img-msg{
+.card-partecipanti{
+    width: 350px;
+    display: inline-block;
+}
+
+.partecipanti{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.card-partecipanti ul li:first-of-type, .img-msg, .intestazione-user>p{
     border-radius: 100%;
     width: 40px;
     height: 40px;
@@ -486,6 +518,17 @@ ul{
     height: 40px;
 }
 
+.email{
+    width: 30px;
+    height: 30px;
+}
+
+/*messaggi*/
+
+ul{
+    list-style: none;
+}
+
 .el-msg, #crea-msg{
     display: flex;
     align-items: top;
@@ -494,11 +537,6 @@ ul{
 .user-msg{
     display: flex;
     font-size: 15px;
-}
-
-.email{
-    width: 30px;
-    height: 30px;
 }
 
 .card-msg, .card-nuovomsg{
@@ -538,28 +576,6 @@ ul{
     margin: 0 0 10px 0;
 }
 
-.card-partecipanti ul{
-    display: flex;
-    justify-content: space-between;
-    border: 1px solid black;
-    border-radius: 10px;
-    align-items: center;
-    padding: 0 20px 0 20px;
-    margin: 15px;
-    background-color: #ffffff;
-}
-
-.card-partecipanti{
-    width: 350px;
-    display: inline-block;
-}
-
-#partecipanti{
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
 /*risorse sg*/
 
 .tabella-ris{
@@ -593,4 +609,16 @@ ul{
 
 .tab-notifica td{
     padding: 10px;
+}
+
+.guardapwd{
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+/* Accesso negato - Account eliminato - Disiscrizione sg*/
+
+.accesso-negato, .account-eliminato, .disiscrivi-sg{
+    margin: 10px 2% 10px 2%;
 }

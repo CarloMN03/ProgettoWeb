@@ -1,0 +1,23 @@
+<section class="cerca-sg">
+    <form action="" method="GET">
+        <ul>
+            <?php if(!empty($_SESSION["username"])): ?>
+                <input type="hidden" id="idcdl" name="idcdl" value="<?php echo $templateParams["idcdl"]; ?>"/>
+            <?php else: ?>
+                <li>
+                    <label for="idcdl" name="idcdl"></label><select name="idcdl" id="idcdl">
+                        <?php foreach(templateParams["cdl"] as $cdl): ?>
+                            <option value="<?php echo $cdl["idcdl"]; ?>"><?php echo $cdl["nomecdl"]; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </li>
+            <?php endif; ?>
+            <li>
+                <label for="idesame" name="idesame"></label><select name="idesame" id="idesame">
+                    <?php foreach($templateParams["esami"] as $esame): ?>
+                    <?php endforeach; ?>
+                </select>
+            </li>
+        </ul>
+    </form>
+</section>

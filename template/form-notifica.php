@@ -1,8 +1,5 @@
 <section class="notifica">
     <h2>Centro Notifiche</h2>
-    <?php if(isset($templateParams["aggiorna-destnotificapref"])): ?>
-            <?php echo $templateParams["aggiorna-destnotificapref"]; ?>
-        <?php endif; ?>
         <?php if(isset($templateParams["aggiorna-notifica"])): ?>
             <?php echo $templateParams["aggiorna-notifica"]; ?>
         <?php endif; ?>

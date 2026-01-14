@@ -10,11 +10,14 @@
         <?php if(isset($templateParams["ritorno-iscrivi"])): ?>
             <h3><?php echo $templateParams["ritorno-iscrivi"]; ?></h3>
         <?php endif; ?>
-        <div id="card-esame">
-            <div id="card-img"><img src="<?php echo UPLOAD_DIR . $templateParams["studygroup"][0]["imgesame"]; ?>" alt=""/>
+        <?php if(isset($templateParams["ritorno-variazionesg"])): ?>
+            <h3><?php echo $templateParams["ritorno-variazionesg"]; ?></h3>
+        <?php endif; ?>
+        <div class="card-esame">
+            <div class="card-img"><img src="<?php echo UPLOAD_DIR . $templateParams["studygroup"][0]["imgesame"]; ?>" alt=""/>
             </div>
-            <div id="card-text">
-                <div id="sg-desc">
+            <div class="card-text">
+                <div class="sg-desc" id="sg-desc">
                     <ul>
                         <li>Tema: <?php echo $templateParams["dettaglio-sg"][0]["tema"]; ?></li>
                         <li>Luogo: <?php echo $templateParams["dettaglio-sg"][0]["luogo"]; ?></li>
@@ -29,11 +32,11 @@
                         <li>Lingua: <?php echo $templateParams["dettaglio-sg"][0]["descrizionelingua"]; ?></li>
                         <li>Numero partecipanti: <?php echo $templateParams["numPartecipanti"][0]["numpart"]; ?></li>
                     </ul>
-                    <div id="button-sg" ononline="loadbutton(<?php echo $_GET['idcdl']; ?>, <?php echo $_GET['idesame']; ?>, <?php echo $_GET['idstudygroup']; ?>, <?php echo empty($templateParams['partecipanti']); ?>)" class="button">
+                    <div class="button-sg" id="button-sg">
                         <ul>
                             <li><button <?php echo $modifica; ?> onclick="modsg()">Modifica</button></li>
                             <li><form action="#" method="POST"><input type="<?php echo $disiscrivi; ?>" name="disiscrivi" id="disiscrivi" value="Disiscrivi"/></form></li>
-                            <li><form <?php echo $iscrivi; ?>action="studygroup.php?idcdl=<?php echo $_GET["idcdl"]; ?>&idesame=<?php echo $_GET["idesame"]; ?>&idstudygroup=<?php echo $_GET["idstudygroup"]; ?>" method="POST"><input type="submit" name="iscrivi" id="iscrivi" value="Iscrivi"></form></li>
+                            <li><form <?php echo $iscrivi; ?>action="studygroup.php?idcdl=<?php echo $_GET["idcdl"]; ?>&idesame=<?php echo $_GET["idesame"]; ?>&idstudygroup=<?php echo $_GET["idstudygroup"]; ?>" method="POST"><input type="submit" name="iscrivi" id="iscrivi" value="Iscrivi"/></form></li>
                         </ul>
                     </div>
                 </div>
@@ -56,7 +59,7 @@
     </section>
     <section class="elenco-partecipanti">
         <h3>Elenco partecipanti</h3>
-        <div id="partecipanti">
+        <div class="partecipanti">
             <?php foreach($templateParams["partecipanti"] as $partecipante): ?>
                 <div class="card-partecipanti">
                     <ul>

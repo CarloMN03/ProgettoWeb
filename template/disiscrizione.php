@@ -1,4 +1,4 @@
-<section>
+<section class="disiscrivi-sg">
     <?php if(isset($templateParams["ritorno-disiscrivi"])): ?>
         <h3><?php echo $templateParams["ritorno-disiscrivi"]; ?></h3>
     <?php endif; ?>

@@ -2,15 +2,15 @@
     <h2>Study Group di <?php echo $templateParams["studygroup"][0]["nomeesame"]; ?> - Risorse</h2>
     <nav id="nav-sg">
         <ul>
-            <li><a href="studygroup.php?idcdl=<?php echo $_GET["idcdl"]; ?>&idesame=<?php echo $_GET["idesame"]; ?>&idstudygroup=<?php echo $_GET["idstudygroup"]; ?>">Gestione</a></li><li><a href="risorsesg.php?idcdl=<?php echo $_GET["idcdl"]; ?>&idesame=<?php echo $_GET["idesame"]; ?>&idstudygroup=<?php echo $_GET["idstudygroup"]; ?>">Risorse</a></li><li><a href="bacheca.php?idcdl=<?php echo $_GET["idcdl"]; ?>&idesame=<?php echo $_GET["idesame"]; ?>&idstudygroup=<?php echo $_GET["idstudygroup"]; ?>">Messaggi</a></li>
+            <li><a href="studygroup.php?idcdl=<?php echo $_GET["idcdl"]; ?>&idesame=<?php echo $_GET["idesame"]; ?>&idstudygroup=<?php echo $_GET["idstudygroup"]; ?>">Gestione</a></li><li><a href="risorsesg.php?idcdl=<?php echo $_GET["idcdl"]; ?>&idesame=<?php echo $_GET["idesame"]; ?>&idstudygroup=<?php echo $_GET["idstudygroup"]; ?>">Risorse</a></li><li><a href="bacheca2.php?idcdl=<?php echo $_GET["idcdl"]; ?>&idesame=<?php echo $_GET["idesame"]; ?>&idstudygroup=<?php echo $_GET["idstudygroup"]; ?>">Messaggi</a></li>
         </ul>
     </nav>
-    <div id="risorse">
+    <div class="risorse">
         <section class="carica-ris">
             <form id="ins-ris" action="risorsesg.php?idcdl=<?php echo $_GET["idcdl"]; ?>&idesame=<?php echo $_GET["idesame"]; ?>&idstudygroup=<?php echo $_GET["idstudygroup"]; ?> " enctype="multipart/form-data" method="POST">
                 <h3>Carica nuova risorsa</h3>
                 <?php if(isset($msg)): ?>
-                    <h3><?php echo $msg; ?></h3>
+                    <h2><?php echo $msg; ?></h2>
                 <?php endif; ?>
                 <ul>
                     <li>
@@ -30,14 +30,20 @@
         </section>
         <section class="elenco-ris">
             <h3>Risorse caricate nello Study Group</h3>
+            <?php if(isset($templateParams["ritorno-rimuovi-ris"])): ?>
+                <h4><?php echo $templateParams["ritorno-rimuovi-ris"]; ?></h2>
+            <?php endif; ?>
             <div class="tabella-ris">
                 <?php if(empty($templateParams["risorsa"])): ?>
-                    <h3>Al momento non sono state caricate risorse sullo Study Group</h3>
+                    <h4>Al momento non sono state caricate risorse sullo Study Group</h3>
                 <?php endif; ?>
-                <table <?php echo $tabella; ?>>  
-                    <tr>
-                        <th id="nomeris">Nome risorsa</th><th id="usercarica">Inserita da</th><th id="azioni">Azioni</th>
-                    </tr>
+                <table <?php echo $tabella; ?>>
+                    <thead>
+                        <tr>
+                            <th id="nomeris">Nome risorsa</th><th id="usercarica">Inserita da</th><th id="azioni">Azioni</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                         <?php foreach($templateParams["risorsa"] as $risorsa) : ?>
                             <?php if($risorsa["notifica"] == 0): ?>
                                 <tr>
@@ -52,6 +58,7 @@
                                 </tr>
                             <?php endif; ?>
                         <?php endforeach; ?>
+                    </tbody>      
                 </table>
             </div>  
         </section> 
