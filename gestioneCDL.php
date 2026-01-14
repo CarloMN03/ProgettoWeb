@@ -15,26 +15,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['azione']) && $_POST['azione'] === 'aggiungi') {
         $nome = trim($_POST['nomecdl'] ?? '');
         $campus = trim($_POST['sede'] ?? '');
-        $img = trim($_POST['img'] ?? '');
         $durata = intval($_POST['durata'] ?? 3);
+        $img = '';
         
-        if (!empty($nome) && !empty($campus)) {
+        // Gestione upload immagine
+        if (isset($_FILES['img']) && $_FILES['img']['error'] !== UPLOAD_ERR_NO_FILE) {
+            if ($_FILES['img']['error'] === UPLOAD_ERR_OK) {
+                $uploadPath = 'img/cdl/';
+                if (!file_exists($uploadPath)) {
+                    mkdir($uploadPath, 0777, true);
+                }
+                
+                $uploadResult = $db->uploadImage($uploadPath, $_FILES['img']);
+                
+                if ($uploadResult[0] === 1) {
+                    $img = $uploadResult[1];
+                } else {
+                    $errore = 'Errore caricamento immagine: ' . $uploadResult[1];
+                }
+            } else {
+                $errore = 'Errore durante il caricamento del file.';
+            }
+        }
+        
+        if (empty($errore) && !empty($nome) && !empty($campus)) {
             $result = $db->insertCdl($nome, $campus, $img, $durata);
             if ($result) {
                 $messaggio = 'Corso aggiunto con successo!';
             } else {
                 $errore = 'Errore durante l\'aggiunta del corso.';
             }
-        } else {
+        } else if (empty($errore)) {
             $errore = 'Compila tutti i campi obbligatori per aggiungere un corso.';
         }
     }
     
     if (isset($_POST['azione']) && $_POST['azione'] === 'elimina') {
         $id = intval($_POST['idcdl'] ?? 0);
+        $cdlInfo = $db->getCdlById($id); 
+        
         if ($id > 0) {
             $result = $db->deleteCdl($id);
             if ($result) {
+                if (!empty($cdlInfo[0]['img']) && file_exists('img/cdl/' . $cdlInfo[0]['img'])) {
+                    unlink('img/cdl/' . $cdlInfo[0]['img']);
+                }
                 $messaggio = 'Corso eliminato con successo!';
             } else {
                 $errore = 'Errore durante l\'eliminazione del corso. Potrebbe avere esami associati.';
@@ -46,21 +71,66 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $id = intval($_POST['idcdl'] ?? 0);
         $nome = trim($_POST['nomecdl'] ?? '');
         $campus = trim($_POST['sede'] ?? '');
-        
-        if ($id > 0 && !empty($nome) && !empty($campus)) {
-            $result = $db->updateCdl($id, $nome, $campus);
+
+        $cdlCorrente = $db->getCdlById($id);
+        $img = '';
+        if (!empty($cdlCorrente)) {
+            $img = $cdlCorrente[0]['img']; 
+        }
+
+        if (isset($_FILES['img']) && $_FILES['img']['error'] !== UPLOAD_ERR_NO_FILE) {
+            if ($_FILES['img']['error'] === UPLOAD_ERR_OK) {
+                $uploadPath = 'img/cdl/';
+                if (!file_exists($uploadPath)) {
+                    mkdir($uploadPath, 0777, true);
+                }
+
+                $uploadResult = $db->uploadImage($uploadPath, $_FILES['img']);
+
+                if ($uploadResult[0] === 1) {
+                    // Nuova immagine caricata con successo
+                    $nuovaImmagine = $uploadResult[1];
+
+                    // Cancella la vecchia immagine se esisteva ed era diversa
+                    if (!empty($img) && file_exists($uploadPath . $img) && $img !== $nuovaImmagine) {
+                        unlink($uploadPath . $img);
+                    }
+                    
+                    // Aggiorna la variabile $img con il nuovo nome
+                    $img = $nuovaImmagine; 
+                } else {
+                    $errore = 'Errore caricamento immagine: ' . $uploadResult[1];
+                }
+            } else {
+                $errore = 'Errore tecnico durante l\'upload del file.';
+            }
+        }
+
+        if (empty($errore) && $id > 0 && !empty($nome) && !empty($campus)) {
+            
+            $result = $db->updateCdl($id, $nome, $campus, $img);
+            
             if ($result) {
                 $messaggio = 'Corso modificato con successo!';
+                $editing = null;
+                header('Location: ' . $_SERVER['PHP_SELF'] . '?msg=' . urlencode($messaggio));
+                exit;
             } else {
-                $errore = 'Errore durante la modifica del corso.';
+                $errore = 'Errore durante la modifica del corso nel database.';
             }
-        } else {
-            $errore = 'Errore durante la modifica del corso.';
+        } else if (empty($errore)) {
+            $errore = 'Dati mancanti per la modifica.';
         }
     }
     
-    header('Location: ' . $_SERVER['PHP_SELF'] . ($messaggio ? '?msg=' . urlencode($messaggio) : '') . ($errore ? '?err=' . urlencode($errore) : ''));
-    exit;
+    if (!empty($messaggio) || !empty($errore)) {
+        $qs = ($messaggio ? 'msg=' . urlencode($messaggio) : '') . ($errore ? '&err=' . urlencode($errore) : '');
+        if ($errore && isset($_POST['idcdl'])) {
+            $qs .= '&edit=' . intval($_POST['idcdl']);
+        }
+        header('Location: ' . $_SERVER['PHP_SELF'] . '?' . $qs);
+        exit;
+    }
 }
 
 if (isset($_GET['edit'])) {
@@ -103,6 +173,7 @@ foreach ($corsiLaurea as $corso) {
             height: auto;
             margin: 10px 0;
             border-radius: 8px;
+            object-fit: cover;
         }
         .card-info {
             display: flex;
@@ -116,6 +187,14 @@ foreach ($corsiLaurea as $corso) {
             color: #999;
             font-style: italic;
             font-size: 0.9em;
+        }
+        /* Stile aggiuntivo per l'anteprima in edit */
+        .current-img-preview {
+            max-width: 100px;
+            border: 1px solid #ddd;
+            padding: 2px;
+            margin-bottom: 5px;
+            display: block;
         }
     </style>
 </head>
@@ -174,7 +253,7 @@ foreach ($corsiLaurea as $corso) {
                         <div class="card <?php echo ($editing && $editing['idcdl'] === $corso['idcdl']) ? 'editing' : ''; ?>">
                             <div class="card-info">
                                 <?php if (!empty($corso['img'])): ?>
-                                    <img src="<?php echo htmlspecialchars($corso['img']); ?>" 
+                                    <img src="img/cdl/<?php echo htmlspecialchars($corso['img']); ?>" 
                                          alt="<?php echo htmlspecialchars($corso['nomecdl']); ?>" 
                                          class="card-image"
                                          onerror="this.style.display='none'">
@@ -209,7 +288,7 @@ foreach ($corsiLaurea as $corso) {
         <aside class="card-add">
             <h2><?php echo $editing ? 'Modifica Corso di Laurea' : 'Aggiungi nuovo Corso di Laurea'; ?></h2>
             <div class="card">
-                <form method="POST">
+                <form method="POST" enctype="multipart/form-data">
                     <input type="hidden" name="azione" value="<?php echo $editing ? 'modifica' : 'aggiungi'; ?>">
                     <?php if ($editing): ?>
                         <input type="hidden" name="idcdl" value="<?php echo $editing['idcdl']; ?>">
@@ -238,14 +317,26 @@ foreach ($corsiLaurea as $corso) {
                             <option value="2">2 anni (Laurea Magistrale)</option>
                             <option value="5">5 anni (Laurea Magistrale a Ciclo Unico)</option>
                         </select>
-
-                        <label for="img">Immagine (opzionale)</label>
-                        <input type="text" id="img" name="img" 
-                               placeholder="Nome file immagine (es: ingegneria.jpg)">
-                        <small style="color: #666; display: block; margin-top: 5px;">
-                            Inserisci il nome del file immagine che si trova nella cartella delle immagini
-                        </small>
                     <?php endif; ?>
+
+                    <label for="img">
+                        <?php echo $editing ? 'Cambia Immagine (Opzionale)' : 'Immagine (Opzionale)'; ?>
+                    </label>
+                    
+                    <?php if ($editing && !empty($editing['img'])): ?>
+                        <div>
+                            <small>Attuale:</small><br>
+                            <img src="img/cdl/<?php echo htmlspecialchars($editing['img']); ?>" class="current-img-preview" alt="Anteprima">
+                        </div>
+                    <?php endif; ?>
+
+                    <input type="file" id="img" name="img" accept="image/jpeg,image/png,image/gif,image/jpg">
+                    <p style="font-size: 0.85em; color: var(--text-secondary); margin-top: 5px;">
+                        Formati accettati: JPG, PNG, GIF (max 500KB).
+                        <?php if ($editing): ?>
+                            <br><strong>Nota:</strong> Se non carichi nulla, verrà mantenuta l'immagine attuale.
+                        <?php endif; ?>
+                    </p>
                     
                     <button class="<?php echo $editing ? 'btn-save' : 'btn-add'; ?>" type="submit">
                         <?php echo $editing ? 'Salva Modifiche' : 'Aggiungi Corso'; ?>

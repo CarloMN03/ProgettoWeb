@@ -38,10 +38,10 @@ class DatabaseHelper {
         return $idcdl;
     }
 
-    public function updateCdl($id, $nome, $campus){
-        $query = "UPDATE cdl SET nomecdl = ?, sede = ? WHERE idcdl = ?";
+    public function updateCdl($id, $nome, $campus, $img){
+        $query = "UPDATE cdl SET nomecdl = ?, sede = ?, img = ? WHERE idcdl = ?";
         $stmt = $this->db->prepare($query);
-        $stmt->bind_param('ssi', $nome, $campus, $id);
+        $stmt->bind_param('sssi', $nome, $campus, $img, $id);
         return $stmt->execute();
     }
 
