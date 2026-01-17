@@ -20,11 +20,11 @@ function openMenu(ʌ, form, v, utente, nome){
         case 0:
             menu =`
             <ul>
-                <li>Ciao ${nome.substr(0, 1).toUpperCase()}${nome.substr(1)}
+                <li>Ciao ${nome.substr(0, 1).toUpperCase()}${nome.substr(1)}</li>
                 <li><a href="profilo.php">Area personale</a></li>
                 <li><a href="#">Home Page</a></li>
                 <li><a href="elenco-cdl.php">Corsi di Laurea</a></li>
-                <li><a href="#">Study Group</a></li>
+                <li><a href="cercastudygroup.php">Study Group</a></li>
                 <li><a href="risorse.php">Risorse</a></li>
                 <li><a href="contatti.php">Contatti</a></li>
                 <li><a href="profilo.php?logout=1">Logout</a></li>
@@ -34,7 +34,7 @@ function openMenu(ʌ, form, v, utente, nome){
         case 1:
             menu =`
             <ul>
-                <li>Ciao ${nome.substr(0, 1).toUpperCase()}${nome.substr(1)}
+                <li>Ciao ${nome.substr(0, 1).toUpperCase()}${nome.substr(1)}</li>
                 <li><a href="#">Home Page</a></li>
                 <li><a href="#">Gestione CDL</a></li>
                 <li><a href="#">Gestione Esami</a></li>
@@ -47,10 +47,11 @@ function openMenu(ʌ, form, v, utente, nome){
         default:
             menu =`
             <ul>
+                <li>Benvenuto</li>
                 <li><a href="#">Home Page</a></li>
                 <li><a href="#">Accedi/Registrati</a></li>
                 <li><a href="elenco-cdl.php">Corsi di Laurea</a></li>
-                <li><a href="#">Study Group</a></li>
+                <li><a href="cercastudygroup.php">Study Group</a></li>
                 <li><a href="#">Risorse</a></li>
                 <li><a href="contatti.php">Contatti</a></li>
             </ul>
@@ -122,7 +123,7 @@ function addPreferenza(){
     `;
 
     document.querySelector(".form-pref").innerHTML = menu;
-    document.querySelector("#card-text ul").style.display = "none";
+    document.querySelector(".card-text ul").style.display = "none";
 }
 
 async function checkNotifica(){
@@ -144,9 +145,9 @@ async function checkNotifica(){
     }
 }
 
-checkNotifica();
 
-setInterval(checkNotifica, 5000);
+
+
 
 function addFormModifica(cdl, esame, pref, daora, aora){
     const formPref = `

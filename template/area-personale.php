@@ -128,9 +128,9 @@
                                         <li>Lingua: <?php echo $preferenza["descrizionelingua"]; ?></li>
                                         <li><button onclick='addFormModifica(<?php echo $preferenza["idcdl"]; ?>, <?php echo $preferenza["idesame"]; ?>, <?php echo $preferenza["idpreferenza"]; ?>, "<?php echo $preferenza["daora"]; ?>", "<?php echo $preferenza["aora"]; ?>")'>Modifica</button></li>
                                         <li><form action="" method="POST">
-                                            <input type="hidden" name="idcdl" id="idcdl" value="<?php echo $preferenza["idcdl"]; ?>"/>
-                                            <input type="hidden" name="idesame" id="idesame" value="<?php echo $preferenza["idesame"]; ?>"/>
-                                            <input type="hidden" name="idpreferenza" id="idpreferenza" value="<?php echo $preferenza["idpreferenza"]; ?>"/>
+                                            <input type="hidden" name="idcdl" id="idcdl<?php echo $preferenza["idcdl"] . $preferenza["idesame"] . $preferenza["idpreferenza"]; ?>" value="<?php echo $preferenza["idcdl"]; ?>"/>
+                                            <input type="hidden" name="idesame" id="idesame<?php echo $preferenza["idcdl"] . $preferenza["idesame"] . $preferenza["idpreferenza"]; ?>" value="<?php echo $preferenza["idesame"]; ?>"/>
+                                            <input type="hidden" name="idpreferenza" id="idpreferenza<?php echo $preferenza["idcdl"] . $preferenza["idesame"] . $preferenza["idpreferenza"]; ?>" value="<?php echo $preferenza["idpreferenza"]; ?>"/>
                                             <input type="submit" name="elimina-pref" value="Elimina"/></form></li>
                                     </ul>  
                                 </div>
@@ -141,12 +141,12 @@
                             <div class="prefcard">
                                 <div class="prefimg">
                                     <img src="<?php echo UPLOAD_DIR; ?>plus.png" alt=""/>
-                                </div><div class="prefdesc">
+                                </div><div class="new-prefdesc">
                                     <h4>Inserisci una nuova preferenza</h4>
                                     <form id="form-new-pref" action="" method="POST">
                                         <ul>
                                             <li>
-                                                <label for="idesame" id="idesame">Esame:</label><select name="idesame" id="idesame" name="idesame">
+                                                <label for="idesame">Esame:</label><select name="idesame" id="idesame" name="idesame">
                                                     <?php foreach($templateParams["esame"] as $esame): ?>
                                                         <option value="<?php echo $esame["idesame"]; ?>"><?php echo $esame["nomeesame"]; ?></option>
                                                     <?php endforeach; ?>

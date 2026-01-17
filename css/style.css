@@ -81,7 +81,7 @@ main h2{
     padding-top: 10px;
 }
 
-section.gest-utente, section.iscr-sg, section.el-cdl, section.esame, section.contatti {
+section.gest-utente, section.iscr-sg, section.el-cdl, section.esame, section.contatti, .cerca-sg {
     margin: 0 1% 0 1%;
 }
 
@@ -138,11 +138,12 @@ section.gest-utente>div{
     font-weight: bold;
 }
 
+
 .sgdesc ul li a:hover{
     color:#bb2e29;
 }
 
-.el-sgcard, .elenco-prefcard{
+.el-sgcard, .elenco-prefcard, .elencosg{
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -269,6 +270,7 @@ div ul li a{
 
 .card-img{
     display: flex;
+    justify-content: center;
 }
 
 .study-gr-anno ul{
@@ -284,8 +286,8 @@ div.study-gr-anno ul li{
 }
 
 .card-stGr-img img, .study-gr-anno ul div img, .card-img img{
-    max-width: 130px;
-    max-height: 130px;
+    width: 130px;
+    height: 130px;
 }
 
 .card-text{
@@ -325,7 +327,7 @@ div.study-gr-anno ul li{
     background-color:#ffffff;
 }
 
-.card-esami h4{
+.card-esami h4, p{
     color: black;
 }
 
@@ -335,8 +337,8 @@ div.study-gr-anno ul li{
     vertical-align: top;
     padding: 10px 1% 10px 1%;
     margin: 20px 5px 20px 20px;
-    width: 200px;
-    height: 200px;
+    width: 230px;
+    height: 230px;
     cursor: pointer;
     border: 3px solid #f2f2f2
 }
@@ -467,7 +469,7 @@ table tr{
     margin: 16px 0 0 0;
 }
 
-.dettaglio-sg, .elenco-partecipanti, .carica-ris, .elenco-ris, .struttura-msg, .nuovo-msg, #newsg{
+.dettaglio-sg, .elenco-partecipanti, .carica-ris, .elenco-ris, .struttura-msg, .nuovo-msg, #newsg, .formsg{
     padding: 5px 2% 20px 2%;
     margin: 5px 1% 20px 1%;
     border-radius: 10px;
@@ -619,6 +621,34 @@ ul{
 
 /* Accesso negato - Account eliminato - Disiscrizione sg*/
 
-.accesso-negato, .account-eliminato, .disiscrivi-sg{
+.accesso-negato, .account-eliminato, .disiscrivi-sg, .logout{
     margin: 10px 2% 10px 2%;
 }
+
+aside>ul{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 0;
+}
+
+.sgscad{
+    margin: 10px 5px 10px 5px;
+    border-radius: 10px;
+    border: 1px solid #dddddd;
+    margin: 10px;
+    padding: 10px;
+    width: 200px;
+    height: 300px;
+    display: inline-grid;
+    align-items: center;
+    justify-content: center;
+}
+
+.sgscad ul li:last-of-type{
+    text-align: right;
+    font-weight: bold;
+    margin-top: 10px;
+}
+

@@ -64,7 +64,7 @@
         }
 
         public function getEsami(){
-            $query = "SELECT * FROM esame";
+            $query = "SELECT E.idcdl, E.idesame, E.nomeesame, E.imgesame, E.annoesame, IFNULL(S.sgattivi, 0) sgattivi FROM esame E LEFT JOIN (SELECT idcdl, idesame, COUNT(*) sgattivi FROM studygroup WHERE data >= CURRENT_DATE GROUP BY idcdl, idesame) S ON (E.idcdl = S.idcdl AND E.idesame = S.idesame) GROUP BY E.idcdl, E.idesame, E.nomeesame, E.annoesame, E.imgesame";
             $stmt = $this->db->prepare($query);
             $stmt->execute();
             $result = $stmt->get_result();
@@ -122,7 +122,7 @@
         }
 
         public function getStGrScad(){
-            $query = "SELECT S.*, E.nomeesame, E.imgesame FROM studygroup AS S, esame AS E  WHERE S.idesame = E.idesame AND S.idcdl = E.idcdl AND data = CURRENT_DATE ORDER BY ora";
+            $query = "SELECT S.*, E.nomeesame, E.imgesame FROM studygroup AS S, esame AS E WHERE S.idesame = E.idesame AND S.idcdl = E.idcdl AND data = CURRENT_DATE ORDER BY ora";
             $stmt = $this->db->prepare($query);
             $stmt->execute();
             $result = $stmt->get_result();
@@ -595,6 +595,16 @@
             $query = "SELECT * FROM esame WHERE idcdl = ?";
             $stmt = $this->db->prepare($query);
             $stmt->bind_param('i', $cdl);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            return $result->fetch_all(MYSQLI_ASSOC);
+        }
+
+        public function getStudyGroupByCdlAndEsame($cdl, $esame, $luogo, $daora, $aora, $lingua){
+            $query = "SELECT * FROM studygroup S, lingua L, esame E WHERE S.idcdl = E.idcdl AND S.idesame = E.idesame AND S.idlingua = L.idlingua AND S.idcdl = ? AND S.idesame = ? AND S.luogo = ? AND S.ora >= ? AND S.ora <= ? AND S.idlingua = ?";
+            $stmt = $this->db->prepare($query);
+            $stmt->bind_param('iissss', $cdl, $esame, $luogo, $daora, $aora, $lingua);
             $stmt->execute();
             $result = $stmt->get_result();
 

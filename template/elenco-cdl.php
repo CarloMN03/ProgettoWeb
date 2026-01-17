@@ -18,7 +18,7 @@
                     </div>
                 </div>
                 <div class="study-gr-anno">
-                    <h3>Esami con Study Group attivi</h3>
+                    <h3>Esami con Study Group</h3>
                     <ul>
                         <?php for($i = 1; $i <= $cdl["durata"]; $i++) : ?>
                             <li><?php switch($i){
@@ -41,6 +41,7 @@
                                             <img src="<?php echo UPLOAD_DIR . $esame["imgesame"]; ?>" alt=""/>   
                                         </div>                             
                                         <h4><?php echo $esame["nomeesame"]; ?></h4>
+                                        <p>Study group attivi: <?php echo $esame["sgattivi"]; ?></p>
                                     </div></a> 
                                 <?php endif; ?>
                             <?php endforeach; ?>

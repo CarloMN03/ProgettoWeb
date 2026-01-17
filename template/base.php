@@ -25,22 +25,27 @@
             <ul>
             <?php foreach($templateParams["studygroupscadenza"] as $cardstudygr): ?>
                 <li>
-                    <div class="card-img"> <img src="<?php echo UPLOAD_DIR.$cardstudygr["imgesame"]; ?>" alt=""></div>
-                    <h3><?php echo $cardstudygr["nomeesame"]; ?></h3>
-                    <ul>
-                        <li>
-                            Tema: <?php echo $cardstudygr["tema"]; ?>
-                        </li>
-                        <li>
-                            Luogo: <?php echo $cardstudygr["luogo"]; ?>
-                        </li>
-                        <li>
-                            Data: <?php echo $cardstudygr["data"]; ?>
-                        </li>
-                        <li>
-                            Ora: <?php echo $cardstudygr["ora"]; ?>
-                        </li>
-                    </ul>
+                    <div class="sgscad">
+                        <div class="card-img"> <img src="<?php echo UPLOAD_DIR.$cardstudygr["imgesame"]; ?>" alt=""></div>
+                        <h3><?php echo $cardstudygr["nomeesame"]; ?></h3>
+                        <ul>
+                            <li>
+                                Tema: <?php echo $cardstudygr["tema"]; ?>
+                            </li>
+                            <li>
+                                Luogo: <?php echo $cardstudygr["luogo"]; ?>
+                            </li>
+                            <li>
+                                Data: <?php echo $cardstudygr["data"]; ?>
+                            </li>
+                            <li>
+                                Ora: <?php echo $cardstudygr["ora"]; ?>
+                            </li>
+                            <li>
+                                <a href="studygroup.php?idcdl=<?php echo $cardstudygr["idcdl"]; ?>&idesame=<?php echo $cardstudygr["idesame"]; ?>&idstudygroup=<?php echo $cardstudygr["idstudygroup"]; ?>">Accedi</a>
+                            </li>
+                        </ul>
+                    </div>
                 </li>
             <?php endforeach; ?>
             </ul>
