@@ -2398,18 +2398,14 @@ ol.card-meta{
     color: white;
 }
 
-
 /*gestione risorsecdl**/
 
-/* sub-list anche fuori dai form (qui non è più form > ul) */
 .form-info .sub-list{
   margin-top: var(--space-3);
   padding-left: var(--space-3);
   border-left: 3px solid var(--border);
 }
 
-
-/* ===== Patch: Modifica + Rimuovi sempre vicini ===== */
 .form-info .form-actions{
   display: inline-flex;
   align-items: center;
@@ -2426,14 +2422,12 @@ ol.card-meta{
   min-height: 44px;
 }
 
-/* (Opzionale ma consigliato) evita che l'input si prenda "tutta la riga" su desktop */
 @media (min-width: 721px){
   .form-info input[type="text"],
   .form-info select{
     width: auto; 
   }
 }
-
 
 @media (max-width: 720px){
   .form-info .btn-secondary,
@@ -2446,14 +2440,12 @@ ol.card-meta{
   }
 }
 
-
 .form-info .actions-inline{
   display: inline-flex;
   align-items: center;
   gap: 8px;
   flex-wrap: nowrap;
 }
-
 
 @media (max-width: 720px){
   .form-info .actions-inline .btn-secondary,
@@ -2468,6 +2460,7 @@ ol.card-meta{
   gap: 12px;
   flex-wrap: nowrap;
 }
+
 .form-info .materia-title{
   flex: 1 1 auto;
   min-width: 0;
@@ -2475,7 +2468,6 @@ ol.card-meta{
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-
 
 /* sub-list anche fuori dai form */
 .form-info .sub-list{
@@ -2500,7 +2492,6 @@ ol.card-meta{
   min-height: 44px;
 }
 
-/* Opzionale: input/select non per forza 100% su desktop */
 @media (min-width: 721px){
   .form-info input[type="text"],
   .form-info select{
@@ -2508,7 +2499,6 @@ ol.card-meta{
   }
 }
 
-/* Sezione Materie/Argomenti: non full-width su mobile */
 .form-info .actions-inline{
   display: inline-flex;
   align-items: center;
@@ -2523,7 +2513,6 @@ ol.card-meta{
   }
 }
 
-/* Header materia: titolo + rimuovi sulla stessa riga */
 .form-info .materia-header{
   display: flex;
   align-items: center;
