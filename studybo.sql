@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Feb 05, 2026 alle 18:44
+-- Creato il: Feb 05, 2026 alle 21:29
 -- Versione del server: 10.4.32-MariaDB
 -- Versione PHP: 8.2.12
 
@@ -77,8 +77,22 @@ CREATE TABLE `adesione` (
 --
 
 INSERT INTO `adesione` (`idcdl`, `idesame`, `idstudygroup`, `username`) VALUES
+(1, 1, 5, 'francy'),
+(1, 3, 6, 'francy'),
+(1, 4, 4, 'francy'),
+(1, 4, 4, 'gianni.gregori'),
+(1, 4, 7, 'francy'),
+(1, 5, 8, 'francy'),
+(1, 8, 9, 'francy'),
 (1, 9, 2, 'gianni.gregori'),
-(3, 47, 3, 'gianni.gregori');
+(1, 9, 12, 'francy'),
+(1, 11, 10, 'francy'),
+(1, 15, 11, 'francy'),
+(2, 18, 13, 'francy'),
+(2, 24, 14, 'francy'),
+(3, 47, 3, 'gianni.gregori'),
+(3, 53, 15, 'francy'),
+(3, 57, 16, 'francy');
 
 -- --------------------------------------------------------
 
@@ -234,10 +248,10 @@ INSERT INTO `cosasistudia` (`idcdl`, `idstudia`, `descrizionestudia`) VALUES
 (1, 3, 'Sistemi operativi e architettura degli elaboratori'),
 (1, 4, 'Basi di dati e progettazione'),
 (1, 5, 'Reti e servizi di rete (fondamenti)'),
-(2, 1, 'Basi di matematica, fisica e informatica'),
-(2, 2, 'Chimica e biomateriali'),
-(2, 3, 'Anatomia e fisiologia (fondamenti)'),
-(2, 4, 'Segnali biomedici e strumentazione'),
+(2, 1, 'Basi di matematica, fisica e informatica e geometria'),
+(2, 2, 'Chimica e biomateriali bbb'),
+(2, 3, 'Anatomia e fisiologia (fondamenti)bb'),
+(2, 4, 'Segnali biomedici e strumentazionebb'),
 (2, 5, 'Progettazione di sistemi e dispositivi'),
 (3, 1, 'Matematica e fisica per l’ingegneria'),
 (3, 2, 'Circuiti elettrici e reti'),
@@ -287,6 +301,48 @@ CREATE TABLE `destnotificarisorsa` (
   `commento` char(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dump dei dati per la tabella `destnotificarisorsa`
+--
+
+INSERT INTO `destnotificarisorsa` (`idcdl`, `idesame`, `idstudygroup`, `idrisorsa`, `idnotifica`, `username`, `letta`, `commento`) VALUES
+(1, 1, 5, 1, 1, 'francy', 0, ''),
+(1, 1, 5, 1, 1, 'gianni.gregori', 1, ''),
+(1, 1, 5, 1, 1, 'mario.rossi1', 0, ''),
+(1, 3, 6, 1, 1, 'francy', 0, ''),
+(1, 3, 6, 1, 1, 'gianni.gregori', 1, ''),
+(1, 3, 6, 1, 1, 'mario.rossi1', 0, ''),
+(1, 4, 7, 1, 1, 'francy', 0, ''),
+(1, 4, 7, 1, 1, 'gianni.gregori', 1, ''),
+(1, 4, 7, 1, 1, 'mario.rossi1', 0, ''),
+(1, 5, 8, 1, 1, 'francy', 0, ''),
+(1, 5, 8, 1, 1, 'gianni.gregori', 1, ''),
+(1, 5, 8, 1, 1, 'mario.rossi1', 0, ''),
+(1, 8, 9, 1, 1, 'francy', 0, ''),
+(1, 8, 9, 1, 1, 'gianni.gregori', 1, ''),
+(1, 8, 9, 1, 1, 'mario.rossi1', 0, ''),
+(1, 9, 12, 1, 1, 'francy', 0, ''),
+(1, 9, 12, 1, 1, 'gianni.gregori', 1, ''),
+(1, 9, 12, 1, 1, 'mario.rossi1', 0, ''),
+(1, 11, 10, 1, 1, 'francy', 0, ''),
+(1, 11, 10, 1, 1, 'gianni.gregori', 1, ''),
+(1, 11, 10, 1, 1, 'mario.rossi1', 0, ''),
+(1, 15, 11, 1, 1, 'francy', 0, ''),
+(1, 15, 11, 1, 1, 'gianni.gregori', 1, ''),
+(1, 15, 11, 1, 1, 'mario.rossi1', 0, ''),
+(2, 18, 13, 1, 1, 'francy', 0, ''),
+(2, 18, 13, 1, 1, 'gianni.gregori', 1, ''),
+(2, 18, 13, 1, 1, 'mario.rossi1', 0, ''),
+(2, 24, 14, 1, 1, 'francy', 0, ''),
+(2, 24, 14, 1, 1, 'gianni.gregori', 1, ''),
+(2, 24, 14, 1, 1, 'mario.rossi1', 0, ''),
+(3, 53, 15, 1, 1, 'francy', 0, ''),
+(3, 53, 15, 1, 1, 'gianni.gregori', 1, ''),
+(3, 53, 15, 1, 1, 'mario.rossi1', 0, ''),
+(3, 57, 16, 1, 1, 'francy', 0, ''),
+(3, 57, 16, 1, 1, 'gianni.gregori', 1, ''),
+(3, 57, 16, 1, 1, 'mario.rossi1', 0, '');
+
 -- --------------------------------------------------------
 
 --
@@ -301,6 +357,18 @@ CREATE TABLE `destnotificavarsg` (
   `username` char(30) NOT NULL,
   `letta` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dump dei dati per la tabella `destnotificavarsg`
+--
+
+INSERT INTO `destnotificavarsg` (`idcdl`, `idesame`, `idstudygroup`, `idnotifica`, `username`, `letta`) VALUES
+(1, 4, 4, 1, 'francy', 1),
+(1, 4, 4, 2, 'francy', 1),
+(1, 4, 4, 3, 'francy', 1),
+(1, 4, 4, 4, 'francy', 1),
+(1, 4, 4, 5, 'francy', 1),
+(1, 4, 4, 5, 'gianni.gregori', 1);
 
 -- --------------------------------------------------------
 
@@ -451,6 +519,14 @@ CREATE TABLE `messaggio` (
   `msgsegnalato` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dump dei dati per la tabella `messaggio`
+--
+
+INSERT INTO `messaggio` (`idcdl`, `idesame`, `idstudygroup`, `idmessaggio`, `username`, `testomessaggio`, `datamsg`, `oramsg`, `msgsegnalato`) VALUES
+(1, 4, 4, 1, 'gianni.gregori', 'ciao', '2026-02-05', '20:21:30', 0),
+(1, 9, 12, 1, 'francy', 'ciao', '2026-02-05', '21:18:09', 0);
+
 -- --------------------------------------------------------
 
 --
@@ -483,6 +559,24 @@ CREATE TABLE `notificarisorsa` (
   `commento` char(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dump dei dati per la tabella `notificarisorsa`
+--
+
+INSERT INTO `notificarisorsa` (`idcdl`, `idesame`, `idstudygroup`, `idrisorsa`, `idnotrisorsa`, `autorizzata`, `lavorata`, `risposta`, `commento`) VALUES
+(1, 1, 5, 1, 1, 1, 1, 1, ''),
+(1, 3, 6, 1, 1, 1, 1, 1, ''),
+(1, 4, 7, 1, 1, 1, 1, 1, ''),
+(1, 5, 8, 1, 1, 1, 1, 1, ''),
+(1, 8, 9, 1, 1, 1, 1, 1, ''),
+(1, 9, 12, 1, 1, 1, 1, 1, ''),
+(1, 11, 10, 1, 1, 1, 1, 1, ''),
+(1, 15, 11, 1, 1, 1, 1, 1, ''),
+(2, 18, 13, 1, 1, 1, 1, 1, ''),
+(2, 24, 14, 1, 1, 1, 1, 1, ''),
+(3, 53, 15, 1, 1, 1, 1, 1, ''),
+(3, 57, 16, 1, 1, 1, 1, 1, '');
+
 -- --------------------------------------------------------
 
 --
@@ -496,6 +590,17 @@ CREATE TABLE `notificavarsg` (
   `idnotifica` int(3) NOT NULL,
   `username` char(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dump dei dati per la tabella `notificavarsg`
+--
+
+INSERT INTO `notificavarsg` (`idcdl`, `idesame`, `idstudygroup`, `idnotifica`, `username`) VALUES
+(1, 4, 4, 1, 'francy'),
+(1, 4, 4, 2, 'francy'),
+(1, 4, 4, 3, 'francy'),
+(1, 4, 4, 4, 'francy'),
+(1, 4, 4, 5, 'gianni.gregori');
 
 -- --------------------------------------------------------
 
@@ -539,6 +644,24 @@ CREATE TABLE `risorsa` (
   `notifica` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dump dei dati per la tabella `risorsa`
+--
+
+INSERT INTO `risorsa` (`idcdl`, `idesame`, `idstudygroup`, `nomeris`, `private`, `username`, `filerisorsa`, `idrisorsa`, `notifica`) VALUES
+(1, 1, 5, 'slide', 0, 'francy', 'Programmazione ad oggetti slide.pdf', 1, 0),
+(1, 3, 6, 'Riassunto', 0, 'francy', 'Basi di dati riassunto.pdf', 1, 0),
+(1, 4, 7, 'Appunti', 0, 'francy', 'Analisi_mat appunti.pdf', 1, 0),
+(1, 5, 8, 'Esercizi', 0, 'francy', 'Programmazione esercizi.pdf', 1, 0),
+(1, 8, 9, 'Formulario', 0, 'francy', 'Algebra e geo formulario.pdf', 1, 0),
+(1, 9, 12, 'Esercizi', 0, 'francy', 'Esercitazione_Interpolazione_Polinomiale.pdf', 1, 0),
+(1, 11, 10, 'Appunti', 0, 'francy', 'Sistemi Operativi riassunto.pdf', 1, 0),
+(1, 15, 11, 'Slide', 0, 'francy', 'Reti slide.pdf', 1, 0),
+(2, 18, 13, 'Formulario', 0, 'francy', 'formulario fisica.pdf', 1, 0),
+(2, 24, 14, 'Riassunto', 0, 'francy', '1_struttura_materia.pdf', 1, 0),
+(3, 53, 15, 'Appunti', 0, 'francy', 'misure elettriche.pdf', 1, 0),
+(3, 57, 16, 'Appunti', 0, 'francy', 'circuiti elettrici.pdf', 1, 0);
+
 -- --------------------------------------------------------
 
 --
@@ -565,7 +688,7 @@ INSERT INTO `sbocchicdl` (`idcdl`, `idsbocchi`, `descrizionesbocchi`) VALUES
 (2, 2, 'Laboratori e aziende biomedicali'),
 (2, 3, 'Ricerca e sviluppo (R&D)'),
 (2, 4, 'Analisi segnali e dati in ambito clinico'),
-(2, 5, 'Supporto tecnico e gestione tecnologie sanitarie'),
+(2, 5, 'Supporto tecnico e gestione tecnologie sanitariebb'),
 (3, 1, 'Progettazione elettronica (analogica/digitale)'),
 (3, 2, 'Embedded e sistemi hardware/software'),
 (3, 3, 'Automazione e sensori'),
@@ -606,8 +729,21 @@ CREATE TABLE `studygroup` (
 --
 
 INSERT INTO `studygroup` (`idcdl`, `idesame`, `idstudygroup`, `idlingua`, `tema`, `luogo`, `dettaglioluogo`, `data`, `ora`, `amministratoresg`) VALUES
+(1, 1, 5, 'IT', 'Java', 'Fisico', 'Via cuba', '2026-02-05', '10:00:00', ''),
+(1, 3, 6, 'IT', 'Database', 'Fisico', 'Via cuba', '2026-06-20', '10:00:00', ''),
+(1, 4, 4, 'EN', 'Matrici', 'Online', '', '2026-06-20', '10:00:00', ''),
+(1, 4, 7, 'IT', 'Matrici', 'Online', 'https://meet.google.com/etu-uzxv-teo', '2026-06-26', '10:00:00', ''),
+(1, 5, 8, 'EN', 'Variabili', 'Online', 'https://meet.google.com/etu-uzxv-teo', '2026-06-20', '20:00:00', ''),
+(1, 8, 9, 'IT', 'Autovalori', 'Online', 'https://meet.google.com/etu-uzxv-teo', '2026-06-20', '20:00:00', ''),
 (1, 9, 2, 'EN', 'Python', 'Fisico', 'Via cuba', '2026-06-20', '10:00:00', ''),
-(3, 47, 3, 'IT', 'Segnali', 'Fisico', 'Via cuba', '2026-06-20', '10:00:00', '');
+(1, 9, 12, 'IT', 'Python', 'Fisico', 'Via cuba', '2026-02-20', '10:00:00', ''),
+(1, 11, 10, 'IT', 'Programmazione concorrente', 'Online', 'https://meet.google.com/etu-uzxv-teo', '2026-02-20', '10:00:00', ''),
+(1, 15, 11, 'IT', 'Internet', 'Online', 'https://meet.google.com/etu-uzxv-teo', '2026-02-20', '10:00:00', ''),
+(2, 18, 13, 'IT', 'Forze', 'Online', 'https://meet.google.com/etu-uzxv-teo', '2026-07-05', '12:00:00', ''),
+(2, 24, 14, 'IT', 'Nomenclatura', 'Online', 'https://meet.google.com/etu-uzxv-teo', '2026-02-20', '15:00:00', ''),
+(3, 47, 3, 'IT', 'Segnali', 'Fisico', 'Via cuba', '2026-06-20', '10:00:00', ''),
+(3, 53, 15, 'IT', 'Campi Magnetici', 'Online', 'https://meet.google.com/etu-uzxv-teo', '2026-04-20', '12:00:00', ''),
+(3, 57, 16, 'IT', 'Progetto', 'Online', 'https://meet.google.com/etu-uzxv-teo', '2026-02-20', '12:00:00', '');
 
 -- --------------------------------------------------------
 
@@ -633,7 +769,7 @@ CREATE TABLE `user` (
 INSERT INTO `user` (`username`, `cognome`, `nome`, `password`, `attivo`, `amministratore`, `imguser`, `idcdl`) VALUES
 ('ale.berti', 'Bertini', 'Alessia', '$2y$10$EszRCmjxlGCHNGWaw6BDGu6PfA6JH2DHZIpIkhotJgL7KicJL2R.u', '1', '0', '3c61a1405504f477.jpg', 4),
 ('Fedez', 'Morbidelli', 'Federico', '$2y$10$t1fKD.GBLt4emPtxZVXKmO.gs2owecAOMdDIMPHagkfha.r1dD7b.', '1', '0', 'f10d6a9b9ba62a19.jpg', NULL),
-('francy', 'Rosso', 'Francesca', '$2y$10$lHuiS6Y4YrM9DBWZzP8BLup7DPVLqqwwnOt50n/Cpy35kq5pmqvGa', '1', '0', 'f1ba05f66b08ede6.jpg', 1),
+('francy', 'Rossi', 'Francesca', '$2y$10$xazzqE9yLWBrkvvvEwYgmeQ/s/yqn4gnMOrrN9xJAYbcnkaGnnT02', '1', '0', '960e135b292af033.jpg', 1),
 ('gianni.gregori', 'Gregori', 'Gianni', '$2y$10$rVdb/mj7zSLCg.FV50OQ3OL3O/ioFpZBeg6H19Swz9gcl.adx2Vqe', '1', '1', 'e700ce4a5b33c2b8.jpg', 1),
 ('mario.rossi1', 'Rossi', 'Mario', '$2y$10$AV0hNgl14XVWs6Cf1lOKWe8D5k24KAquxFaW2MI/0FaBmzeu6A12a', '1', '1', '', NULL),
 ('Marty', 'Gioia', 'Martina', '$2y$10$gUHfahQ6p7gZlpXNtEEs4uHrt7oGfPHPWfBTGQUlOmD5FW.7gMY6.', '1', '0', 'b86e9b0d9e43adf2.jpg', 1);
